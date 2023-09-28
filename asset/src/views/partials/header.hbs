@@ -1,0 +1,215 @@
+<nav class="navbar bg-primary-subtle">
+    <div id="navmenu" class="container align-items-center">
+        <div class="d-flex" style="width: 400px;">
+            <a href="" class="navbar-brand apptitle">StoreDB</a>
+
+            <form id="form-search" action="" class="w-100">
+                <input id="searchinput" type="search" placeholder="Tìm kiếm" class="form-control">
+            </form>
+        </div>
+
+        <div class="userArea d-flex justify-content-between aling-items-center">
+            <div class="userLanguage ms-4">
+                <div class="languageLogo d-flex justify-content-center align-items-center">
+                    <i class="fa-regular fa-globe"></i>
+                    <p>Tiếng Việt</p>
+                </div>
+
+                <ul class="userLanguage-content">
+                    <li class="pointer">Tiếng Việt</li>
+                    <li class="pointer">Tiếng Anh</li>
+
+                    <div class="brtop"></div>
+                    <div class="brbottom"></div>
+                </ul>
+            </div>
+
+            <div class="userNotify ms-4">
+                <div class="notifyLogo d-flex justify-content-end align-items-center">
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+
+                <div class="userNotify-content">
+                    <p class="Notify-title border-bottom">Thông báo mới nhận</p>
+
+                    <div class="Notify-list">
+                        <a href="" class="Notify-item row pointer link-item">
+                            <div class="col-3 col-xl-3">
+                                <img id="Notify-img" src="/images/product1.jpg" alt="">
+                            </div>
+                            <div class="Notify-desc col-9 col-xl-9">
+                                <p class="Notify-desc-title">Có sản phẩm mới</p>
+                                <p class="Notify-desc-content">Laptop mới nhất năm</p>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="" class="Notify-link_all pointer link-item border-top d-block text-center">Xem
+                        tất cả</a>
+
+                    <div class="brtop"></div>
+                    <div class="brbottom"></div>
+                </div>
+            </div>
+
+            <div class="userCarts ms-4">
+                <div class="userCartLogo">
+                    <i class="fa-regular fa-cart-shopping"></i>
+                </div>
+
+                <div class="userCart-content">
+
+                    <p class="userCart-item_title border-bottom">Giỏ Hàng Của Bạn</p>
+
+                    <a href="" class="userCart-item link-item pointer d-flex">
+                        <div class="row">
+                            <div class="userCart-item_img col-3 col-xl-3">
+                                <img src="/images/product1.jpg" alt="">
+                            </div>
+
+                            <div class="userCart-item_name col-9 col-xl-9">
+                                <p>Laptop Gaming Asus Tuff F15 FX506HCB</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="userCart-item_btn d-flex border-top align-items-center justify-content-between">
+                        <p>5 Sản phẩm mới thêm</p>
+                        <button class="btn btn-primary">Xem giỏ hàng</button>
+                    </div>
+
+                    <div class="brtop"></div>
+                    <div class="brbottom"></div>
+                </div>
+            </div>
+
+            <div class="userInfor d-none pointer ms-4">
+                <div class="d-flex align-items-center">
+                    <div class="userInfor-Avatar">
+                        <img src="/images/avatar-1.jpg" alt="" class="rounded-circle">
+                    </div>
+                    <p id="userName">Lê Thanh An</p>
+                </div>
+
+                <ul class="userInfor-content">
+                    <li class="link-item pointer">Tài khoản của tôi</li>
+                    <li class="link-item pointer">Quản lý đơn hàng</li>
+                    <li class="link-item pointer">Đăng xuất</li>
+
+                    <div class="brtop"></div>
+                    <div class="brbottom"></div>
+                </ul>
+            </div>
+
+            <a id="form-open" class="userLogin ms-4 d-block link-item pointer">Đăng nhập/Đăng ký</a>
+
+        </div>
+
+    </div>
+
+    <div id="navcategory" class="container-fluid bg-dark">
+        <div class="container">
+            <ul class="list-category d-flex justify-content-between">
+                <li class="link-item pointer">
+                    <i class="me-1 fa-brands fa-apple"></i>Apple
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-laptop"></i>Laptop
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-mobile-notch"></i>Điện Thoại
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-computer"></i>PC Văn Phòng
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-computer"></i>PC Gaming
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-microchip"></i>Linh Kiện PC
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-keyboard"></i>Phụ Kiện
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-network-wired"></i>Phần Mềm & Mạng
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-regular fa-loveseat"></i>Bàn & Ghế
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="modal-login_form">
+    <div class="login-form_container">
+        <i class="fa-regular fa-xmark form_close"></i>
+        <!-- Login From -->
+        <div class="form login_form">
+            <div>
+                <h2>Đăng Nhập</h2>
+
+                <div class="input_box">
+                    <input type="text" id="tblEmail1" autocomplete="email" name="email" placeholder="Tên đăng nhập hoặc Email" required />
+                    <i class="fa-light fa-envelope email"></i>
+                </div>
+                <div class="input_box">
+                    <input type="password" id="tblPassword1" name="password" placeholder="Nhập Mật khẩu của bạn"
+                        required />
+                    <i class="fa-light fa-lock password"></i>
+                    <i class="fa-light fa-eye-slash pw_hide"></i>
+                </div>
+
+                <div class="option_field">
+                    <span class="checkbox">
+                        <input type="checkbox" id="remember" />
+                        <label for="remember">Ghi nhớ tài khoản</label>
+                    </span>
+                    <a href="#" class="forgot_pw">Quên mật khẩu?</a>
+                </div>
+
+                <span id="loginErr" class="msg-danger"></span>
+
+                <button id="btnLogin" type="submit" class="btn-form text-bg-primary">Đăng Nhập Ngay</button>
+
+                <div class="login_signup">Chưa có tài khoản? <a href="#" id="signup">đăng ký!</a></div>
+            </div>
+        </div>
+
+        <!-- Signup From -->
+        <div class="form signup_form">
+            <div>
+                <h2>Đăng Ký</h2>
+
+                <div class="input_box">
+                    <input type="email" id="tblEmail" autocomplete="email" name="email" placeholder="Nhập Email của bạn" required />
+                    <i class="fa-light fa-envelope email"></i>
+                    <span id="emailErr" class="msg-danger">Lỗi đăng ký</span>
+                </div>
+                <div class="input_box">
+                    <input type="text" id="tblUsername" autocomplete="name" name="username" placeholder="Nhập tên đăng nhập" required />
+                    <i class="fa-light fa-user email"></i>
+                    <span id="usernameErr" class="msg-danger">Lỗi đăng ký</span>
+                </div>
+                <div class="input_box">
+                    <input type="password" id="tblPassword" name="password" onblur="validatePassword()"
+                        placeholder="Nhập Mật khẩu" required />
+                    <i class="fa-light fa-lock password"></i>
+                    <i class="fa-light fa-eye-slash pw_hide"></i>
+                    <span id="passwordErr" class="msg-danger">Lỗi đăng ký</span>
+                </div>
+                <div class="input_box">
+                    <input type="password" id="tblConfirmPassword" onblur="validatePassword()"
+                        placeholder="Xác nhận mật khẩu" required />
+                    <i class="fa-light fa-lock password"></i>
+                    <i class="fa-light fa-eye-slash pw_hide"></i>
+                    <span id="confirmpasswordErr" class="msg-danger">Lỗi đăng ký</span>
+                </div>
+
+                <button id="btnRegister" class="btn-form text-bg-primary">Đăng Ký Ngay</button>
+
+                <div class="login_signup">Bạn đã có tài khoản? <a href="#" id="login">đăng nhập!</a></div>
+            </div>
+        </div>
+    </div>
+</section>
