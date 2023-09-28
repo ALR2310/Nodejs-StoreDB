@@ -30,73 +30,24 @@
 
 <div class="container">
     <div class="row">
+        {{#each products}}
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
             <a href="#" class="product-card d-block pointer link-item">
                 <div class="product-img d-flex justify-content-center align-items-center">
-                    <img src="/images/product1.jpg" alt="sản phẩm">
+                    <img src="{{this.Images}}" alt="sản phẩm">
                 </div>
 
                 <div class="product-name">
-                    <p>Laptop ASUS Tuf FX506HCB</p>
+                    <p>{{this.Productname}}</p>
                 </div>
 
                 <div class="product-price">
-                    <p>30.000.000đ</p>
+                    <p>{{this.Price}}đ</p>
                 </div>
                 <button class="btn hover w-100 mt-3 text-bg-primary">Mua Ngay</button>
             </a>
         </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
-            <a href="#" class="product-card d-block pointer link-item">
-                <div class="product-img d-flex justify-content-center align-items-center">
-                    <img src="/images/product1.jpg" alt="sản phẩm">
-                </div>
-
-                <div class="product-name">
-                    <p>Laptop ASUS Tuf FX506HCB</p>
-                </div>
-
-                <div class="product-price">
-                    <p>30.000.000đ</p>
-                </div>
-                <button class="btn hover w-100 mt-3 text-bg-primary">Mua Ngay</button>
-            </a>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
-            <a href="#" class="product-card d-block pointer link-item">
-                <div class="product-img d-flex justify-content-center align-items-center">
-                    <img src="/images/product1.jpg" alt="sản phẩm">
-                </div>
-
-                <div class="product-name">
-                    <p>Laptop ASUS Tuf FX506HCB</p>
-                </div>
-
-                <div class="product-price">
-                    <p>30.000.000đ</p>
-                </div>
-                <button class="btn hover w-100 mt-3 text-bg-primary">Mua Ngay</button>
-            </a>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3">
-            <a href="#" class="product-card d-block pointer link-item">
-                <div class="product-img d-flex justify-content-center align-items-center">
-                    <img src="/images/product1.jpg" alt="sản phẩm">
-                </div>
-
-                <div class="product-name">
-                    <p>Laptop ASUS Tuf FX506HCB</p>
-                </div>
-
-                <div class="product-price">
-                    <p>30.000.000đ</p>
-                </div>
-                <button class="btn hover w-100 mt-3 text-bg-primary">Mua Ngay</button>
-            </a>
-        </div>
+        {{/each}}
     </div>
 </div>
 

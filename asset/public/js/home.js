@@ -1,3 +1,15 @@
+// function giới hạn văn bản hiển thị 
+function limitText(element, limit) {
+    var text = element.innerText;
+    if (text.length > limit) {
+        element.innerText = text.slice(0, limit) + '...';
+    }
+}
+var productnames = document.querySelectorAll('.product-name');
+productnames.forEach((productname) => {
+    limitText(productname, 60);
+})
+
 
 //function thanh slider
 const sliderImages = document.querySelectorAll(".slider-content img");
