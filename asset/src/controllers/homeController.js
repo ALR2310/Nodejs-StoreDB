@@ -19,28 +19,6 @@ module.exports = {
         LoadProduct(res);
     },
 
-    // Mở trang create
-    create(req, res) {
-        res.render('home/create');
-    },
-
-    // Thêm sản phẩm
-    createProduct(req, res) {
-        //Lấy dữ liệu
-        const { name, categoryId, image, price } = req.body;
-        const userId = res.locals.currentUser.Id;
-
-        var sql = 'insert into product (userId, categoryId, images, productname, price) values (?, ?, ?, ?, ?)';
-        var params = [userId, categoryId, image, name, price];
-
-        db.query(sql, params, (err, result) => {
-            if (err) { console.log('Lỗi truy vấn') }
-            else {
-                res.json({ success: true });
-            }
-        })
-    },
-
     // Hàm sử lý chức năng đăng nhập
     login(req, res) {
         const { email, password, remember } = req.body; // Nhận dữ liệu từ client gửi đến
@@ -104,7 +82,7 @@ module.exports = {
                         //Tiến hành đăng ký
                         if (userNameExist == false && emailExist == false) {
                             sql = 'INSERT INTO Users (UserName, Password, Email, Avatar) VALUES (?, ?, ?, ?)';
-                            var defaultAvatar = '/imgs/defaultAvatar.jpg';
+                            var defaultAvatar = '/images/defaultAvatar.jpg';
                             params = [username, password, email, defaultAvatar];
 
                             db.query(sql, params, (err, result) => {
@@ -120,8 +98,6 @@ module.exports = {
                 });
             }
         });
-
-
     },
 
     // Một hàm middleware để xác thực người dùng trong mọi yêu cầu

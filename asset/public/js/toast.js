@@ -26,7 +26,7 @@ function toast({ title = '', message = '', type = 'info', duration = 3000 }) {
         const icon = icons[type];
         const delay = (duration / 1000).toFixed(2);
 
-        toast.classList.add('toast', `toast--${type}`);
+        toast.classList.add('toast', 'show', `toast--${type}`);
         toast.style.animation = `slideInLeft 0.4s ease, fadeOut linear 1s ${delay}s forwards`;
         toast.innerHTML = `
             <div class="toast__icon">
@@ -49,7 +49,7 @@ function showSuccessToast(message) {
         title: 'Thành Công',
         message: message || 'Bạn đã đăng ký tài khoản thành công',
         type: 'success',
-        duration: 5000
+        duration: 6000
     });
 }
 function showInfoToast(message) {
@@ -57,7 +57,7 @@ function showInfoToast(message) {
         title: 'Thông tin',
         message: message || 'Có thông báo mới được gửi đến hộp thư',
         type: 'info',
-        duration: 5000
+        duration: 6000
     });
 }
 function showWarningToast(message) {
@@ -65,7 +65,7 @@ function showWarningToast(message) {
         title: 'Cảnh Báo',
         message: message || 'Các trường dữ liệu không được để trống',
         type: 'warning',
-        duration: 5000
+        duration: 6000
     });
 }
 function showErrorToast(message) {
@@ -73,6 +73,6 @@ function showErrorToast(message) {
         title: 'Thất Bại',
         message: message || 'Có lỗi đã xảy ra trong quá trình đăng ký, vui lòng thử lại',
         type: 'error',
-        duration: 5000
+        duration: 6000
     });
 }

@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const app = express()
 const path = require('path')
 const host = 'localhost'
-const port = 2310
+const port = 3000
 
 //Middleware
 app.use(express.json())
