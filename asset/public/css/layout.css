@@ -11,6 +11,11 @@
     padding: 10px 0;
 }
 
+#navcategory .navcategory-content {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .fixed-nav {
     position: fixed;
     top: 0;
@@ -299,6 +304,14 @@
     padding: 10px;
     color: white;
     white-space: nowrap;
+}
+
+.list-category li:first-child {
+    padding-left: 0;
+}
+
+.list-category li:last-child {
+    padding-right: 0;
 }
 
 .list-category li:hover {

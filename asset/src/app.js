@@ -28,8 +28,10 @@ app.use(express.static(path.join(__dirname, '../', 'public')))
 //Router
 const homeRouter = require('./routers/homeRouter');
 const productRouter = require('./routers/productRouter');
+const userRouter = require('./routers/userRouter');
 
 app.use('/', homeRouter);
 app.use('/san-pham', productRouter);
+app.use('/nguoi-dung', userRouter);
 
 app.listen(port, () => console.log(`Ứng dụng chạy trên http://${host}:${port}`))

@@ -1,0 +1,227 @@
+<link rel="stylesheet" href="/css/user.css">
+<script src="/lib/ckeditor5/build/ckeditor.js"></script>
+
+
+<div class="container mt-5">
+    <div class="row product-heading">
+        <h2>Quản lý sản phẩm</h2>
+    </div>
+
+    <div class="row add-product-btn mb-4">
+        <div class="col-12 col-md-6">
+            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-addProduct">Thêm sản phẩm
+                mới</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Card sản phẩm 1 -->
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thêm các card sản phẩm khác ở đây -->
+    </div>
+
+    <div class="row product-show-more">
+        <!-- Card sản phẩm 1 -->
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card product-card">
+                <img src="/images/product1.jpg" class="card-img">
+                <div class="card-body">
+                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <div class="card-btn">
+                        <a href="#" class="btn btn-primary">Xem hàng</a>
+                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thêm các card sản phẩm khác ở đây -->
+    </div>
+
+    <!-- Nút Xem thêm sản phẩm -->
+    <div class="row view-more-btn">
+        <div class="col">
+            <button class="btn btn-primary">Xem thêm sản phẩm</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-center">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm mới</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Form để nhập dữ liệu -->
+                <form>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="productName" class="form-label">Tên sản phẩm:</label>
+                            <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm">
+                        </div>
+                        <div class="col-3">
+                            <label for="price" class="form-label">Giá bán:</label>
+                            <input type="number" class="form-control" id="price" placeholder="Nhập giá bán">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <label for="image" class="form-label">Chọn hình ảnh:</label>
+                            <input type="file" class="form-control" id="image" accept="image/*">
+                        </div>
+                        <div class="col">
+                            <label for="category" class="form-label">Danh mục sản phẩm:</label>
+                            <select class="form-select" id="category">
+                                {{#each categories}}
+                                <option value="{{this.Id}}">{{this.CategoryName}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <label for="price" class="form-label">Số lượng:</label>
+                            <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
+                                value="1">
+                        </div>
+
+                    </div>
+                    <div>
+                        <label for="editor" class="form-label">Mô tả sản phẩm:</label>
+                        <div id="toolbar-container"></div>
+                        <div id="editor"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="row w-100 align-items-center">
+                    <div class="col">
+                        <div class="tag-input border">
+                            <div class="tags"></div>
+                            <input type="text" id="tagInput" placeholder="Thêm nhãn tìm kiếm">
+                        </div>
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button id="btnSave" type="button" class="btn btn-primary">Lưu</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/user.js"></script>
+
+<script>
+    // Khởi tạo ckeditor
+    var initialContent;
+    var editor;
+
+    DecoupledEditor
+        .create(document.querySelector('#editor'))
+        .then(createdEditor => {
+            const toolbarContainer = document.querySelector('#toolbar-container');
+
+            toolbarContainer.appendChild(createdEditor.ui.view.toolbar.element);
+
+            // Lưu giá trị ban đầu của CKEditor và instance CKEditor
+            initialContent = createdEditor.getData();
+            editor = createdEditor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>

@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="/css/user.css">
+
+<div class="divUserInfo container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="user-details">
+                <img src="{{user.Avatar}}" alt="Avatar" class="img-fluid user-avatar">
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="user-details">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div id="displayName" class="user-title">{{user.DisplayName}}</div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-primary" id="editButton">Chỉnh sửa</button>
+                        <button class="btn btn-success" id="saveButton">Lưu</button>
+                        <button class="btn btn-danger" id="closeButton">Huỷ bỏ</button>
+                    </div>
+                </div>
+
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="user-label">Email:</p>
+                        <p class="user-info">{{user.Email}}</p>
+                        <p class="user-label">Số điện thoại:</p>
+                        <p id="lblPhoneNumber" class="user-info">{{user.PhoneNumber}}</p>
+                        <input id="tblPhoneNumber" type="text" class="form-control edit-input"
+                            value="{{user.PhoneNumber}}">
+                        <p class="user-label">Giới tính:</p>
+                        <p id="lblGender" class="user-info">{{user.Gender}}</p>
+                        <select class="form-select edit-input" id="genderSelect">
+                            <option value="male">Nam</option>
+                            <option value="female">Nữ</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="user-label">Ngày sinh:</p>
+                        <p id="lblDateofbirth" class="user-info">{{user.DateOfBirth}}</p>
+                        <input id="tblDateofbirth" type="date" class="form-control edit-input"
+                            value="{{user.DateOfBirthInput}}">
+                        <p class="user-label">Địa chỉ:</p>
+                        <p id="lblAddress" class="user-info">{{user.Address}}</p>
+                        <input id="tblAddress" type="text" class="form-control edit-input" value="{{user.Address}}">
+                        <p class="user-label">Ngày tham gia:</p>
+                        <p class="user-info">{{user.AtCreate}}</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/user.js"></script>

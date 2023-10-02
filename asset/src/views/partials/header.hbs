@@ -1,7 +1,7 @@
 <nav class="navbar bg-primary-subtle">
     <div id="navmenu" class="container align-items-center">
-        <div class="d-flex" style="width: 400px;">
-            <a href="" class="navbar-brand apptitle">StoreDB</a>
+        <div class="d-flex align-items-center" style="width: 400px;">
+            <a href="/" class="navbar-brand apptitle">StoreDB</a>
 
             <form id="form-search" action="" class="w-100">
                 <input id="searchinput" type="search" placeholder="Tìm kiếm" class="form-control">
@@ -91,8 +91,12 @@
                 </div>
 
                 <ul class="userInfor-content">
-                    <li class="link-item pointer">Tài khoản của tôi</li>
-                    <li class="link-item pointer">Quản lý đơn hàng</li>
+                    <li class="pointer">
+                        <a href="/nguoi-dung/{{currentUser.Id}}" class="link-item">Tài khoản của tôi</a>
+                    </li>
+                    <li class="pointer">
+                        <a href="/nguoi-dung/quan-ly-san-pham" class="link-item">Quản lý đơn hàng</a>
+                    </li>
                     <li id="btnLogout" class="link-item pointer">Đăng xuất</li>
 
                     <div class="brtop"></div>
@@ -107,16 +111,16 @@
     </div>
 
     <div id="navcategory" class="container-fluid bg-dark">
-        <div class="container">
+        <div class="container navcategory-content">
             <ul class="list-category d-flex justify-content-between">
-                <li class="link-item pointer">
-                    <i class="me-1 fa-brands fa-apple"></i>Apple
-                </li>
                 <li class="link-item pointer">
                     <i class="me-1 fa-regular fa-laptop"></i>Laptop
                 </li>
                 <li class="link-item pointer">
                     <i class="me-1 fa-regular fa-mobile-notch"></i>Điện Thoại
+                </li>
+                <li class="link-item pointer">
+                    <i class="me-1 fa-brands fa-apple"></i>Apple
                 </li>
                 <li class="link-item pointer">
                     <i class="me-1 fa-regular fa-computer"></i>PC Văn Phòng

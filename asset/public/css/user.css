@@ -1,0 +1,197 @@
+.divUserInfo {
+    margin-bottom: 90px;
+}
+
+.user-details {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+.user-avatar {
+    border-radius: 20%;
+}
+
+.user-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.user-label {
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.user-info {
+    margin-bottom: 20px;
+}
+
+#saveButton,
+#closeButton,
+.edit-input {
+    display: none;
+}
+
+#editButton,
+#saveButton,
+#closeButton {
+    width: 100px;
+}
+
+#closeButton {
+    margin-left: 15px;
+}
+
+
+/* //////////////////// */
+
+.product-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 20px;
+    max-width: 100%;
+}
+
+.product-card:hover {
+    transform: scale(1.03);
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+}
+
+.card-body {
+    padding: 10px;
+    text-align: center;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.btn-info,
+.btn-primary {
+    border: none;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    margin: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-info {
+    color: black;
+}
+
+.btn-info:hover {
+    background-color: #17b0c7;
+}
+
+.card-btn {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Thêm CSS cho dòng trên sản phẩm */
+.product-heading {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.product-heading h2 {
+    text-align: center;
+}
+
+.add-product-btn {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.view-more-btn {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.product-show-more {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.product-show-more.active {
+    max-height: 100%;
+    transition: all .5s ease;
+}
+
+/* //////////////////// */
+
+#editor {
+    margin-top: 10px;
+    height: 320px;
+    border-radius: 5px;
+    border: 1px solid var(--bs-border-color);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#editor:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+
+/* /////////////////// */
+
+.tag-input {
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 5px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.tag {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+#tagInput {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 0.375rem 0;
+    border-radius: 5px;
+}
+
+.tag-input-focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
