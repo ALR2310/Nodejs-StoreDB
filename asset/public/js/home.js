@@ -7,7 +7,7 @@ function limitText(element, limit) {
 }
 var productnames = document.querySelectorAll('.product-name');
 productnames.forEach((productname) => {
-    limitText(productname, 60);
+    limitText(productname, 40);
 })
 
 

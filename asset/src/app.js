@@ -2,6 +2,7 @@ const express = require('express')
 const handlebars = require('express-handlebars')
 const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
+const multer = require('multer');
 const app = express()
 const path = require('path')
 const host = 'localhost'
@@ -29,9 +30,15 @@ app.use(express.static(path.join(__dirname, '../', 'public')))
 const homeRouter = require('./routers/homeRouter');
 const productRouter = require('./routers/productRouter');
 const userRouter = require('./routers/userRouter');
+const uploadRouter = require('./routers/uploadRouter');
 
 app.use('/', homeRouter);
 app.use('/san-pham', productRouter);
 app.use('/nguoi-dung', userRouter);
+app.use('/upload', uploadRouter);
+
+
+
+
 
 app.listen(port, () => console.log(`Ứng dụng chạy trên http://${host}:${port}`))

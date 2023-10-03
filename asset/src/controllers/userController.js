@@ -57,30 +57,6 @@ module.exports = {
     },
 
     //Post upload sản phẩm
-    // async create(req, res) {
-    //     try {
-    //         // Nhập dữ liệu từ client
-    //         const { productName, price, image, category, quantity, description } = req.body;
-    //         const currentUserId = res.locals.currentUser.Id;
-
-    //         var sql = 'insert into product(UserId, CategoryId, Images, Productname, Quantity, Price) value (?, ?, ?, ?, ?, ?)';
-    //         var params = [currentUserId, category, image, productName, quantity, price];
-    //         const insertProduct = await db.query(sql, params);
-
-    //         // Lấy Id sản phẩm
-    //         const productId = insertProduct.insertId;
-
-    //         sql = 'insert into ProductDesc(ProductId, Desccription) values(?, ?)';
-    //         params = [productId, description];
-    //         await db.query(sql, params);
-
-    //         return res.json({ success: true });
-    //     } catch (err) {
-    //         console.log(err)
-    //         return res.status(500).json({ success: false, error: 'Lỗi truy vấn cơ sở dữ liệu' });
-    //     }
-    // },
-
     create(req, res) {
         // Nhập dữ liệu từ client
         const { productName, price, image, category, quantity, description } = req.body;

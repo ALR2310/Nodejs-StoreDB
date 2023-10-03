@@ -66,45 +66,119 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     } addtagsearchinput();
 
+    function clearErrorMsgInput() {
+        $('#productName').on('change', function () {
+            if ($('#productName').hasClass('is-invalid')) {
+                $('#productName').removeClass('is-invalid');
+            }
+        });
+        $('#price').on('change', function () {
+            if ($('#price').hasClass('is-invalid')) {
+                $('#price').removeClass('is-invalid');
+            }
+        });
+        $('#image').on('change', function () {
+            if ($('#image').hasClass('is-invalid')) {
+                $('#image').removeClass('is-invalid');
+            }
+        });
+        $('#quantity').on('change', function () {
+            if ($('#quantity').hasClass('is-invalid')) {
+                $('#quantity').removeClass('is-invalid');
+            }
+        });
+        $('#editor').on('change', function () {
+            if ($('#editor').hasClass('is-invalid')) {
+                $('#editor').removeClass('is-invalid');
+            }
+        });
+    } clearErrorMsgInput();
+
+
     // Jquery thực hiện thêm sản phẩm
     $('#btnSave').click(function () {
-        const data = {
-            productName: $('#productName').val(),
-            price: $('#price').val(),
-            image: $('#image').val(),
-            category: $('#category').val(),
-            quantity: $('#quantity').val(),
-            description: $('#editor').html(),
+
+        if ($('#productName').val() == '') {
+            $('#productName').addClass('is-invalid');
+        }
+        if ($('#price').val() == '') {
+            $('#price').addClass('is-invalid');
+        }
+        if ($('#image').prop('files').length == 0) {
+            $('#image').addClass('is-invalid');
+        }
+        if ($('#quantity').val() == '') {
+            $('#quantity').addClass('is-invalid');
+        }
+        if ($('#editor').html() == '<p><br data-cke-filler="true"></p>') {
+            $('#editor').addClass('is-invalid');
         }
 
-        $.ajax({
-            url: '/nguoi-dung/them-san-pham',
-            method: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            dataType: 'json',
-            success: function (data) {
-                if (data.success) {
-                    showSuccessToast('Thêm sản phẩm thành công');
-                    $('#modal-addProduct').modal('hide'); // ẩn modal
+        if ($('#productName').val() != '' && $('#price').val() != '' &&
+            $('#image').prop('files').length != 0 && $('#quantity').val() != '' && $('#editor').html() != '<p><br data-cke-filler="true"></p>') {
 
-                    // Đặt lại nội dung trong các input
-                    $('#productName').val('');
-                    $('#price').val('');
-                    $('#image').val('');
-                    $('#category').val('1');
-                    $('#quantity').val('1');
-                    // Đặt lại nội dung trong ckeditor
-                    if (editor) {
-                        editor.setData(initialContent);
+            // Xử lý tải lên hình ảnh sản phẩm
+            const files = document.querySelector('#image').files;
+            const formData = new FormData();
+
+            for (const file of files) {
+                formData.append('file', file);
+            };
+            $.ajax({
+                url: '/upload/image',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    const data = {
+                        productName: $('#productName').val(),
+                        price: $('#price').val(),
+                        image: res.uploadedFilePath, //lấy đường dẫn hình ảnh
+                        category: $('#category').val(),
+                        quantity: $('#quantity').val(),
+                        description: $('#editor').html(),
                     }
+                    // xử lý gửi dữ liệu về api để tải lên sản phẩm
+                    $.ajax({
+                        url: '/nguoi-dung/them-san-pham',
+                        method: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.success) {
+                                showSuccessToast('Thêm sản phẩm thành công');
+                                $('#modal-addProduct').modal('hide'); // ẩn modal
+
+                                // Đặt lại nội dung trong các input
+                                $('#productName').val('');
+                                $('#price').val('');
+                                $('#image').val('');
+                                $('#category').val('1');
+                                $('#quantity').val('1');
+                                // Đặt lại nội dung trong ckeditor
+                                if (editor) {
+                                    editor.setData(initialContent);
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
                 }
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        })
+            });
+
+
+
+        }
     });
+
+
 });
 
 

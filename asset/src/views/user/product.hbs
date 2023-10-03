@@ -150,16 +150,19 @@
                         <div class="col">
                             <label for="productName" class="form-label">Tên sản phẩm:</label>
                             <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm">
+                            <div class="invalid-feedback">Vui lòng nhập tên sản phẩm</div>
                         </div>
                         <div class="col-3">
                             <label for="price" class="form-label">Giá bán:</label>
                             <input type="number" class="form-control" id="price" placeholder="Nhập giá bán">
+                            <div class="invalid-feedback">Vui lòng nhập giá bán</div>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-auto">
                             <label for="image" class="form-label">Chọn hình ảnh:</label>
                             <input type="file" class="form-control" id="image" accept="image/*">
+                            <div class="invalid-feedback">Vui lòng chọn hình ảnh</div>
                         </div>
                         <div class="col">
                             <label for="category" class="form-label">Danh mục sản phẩm:</label>
@@ -173,6 +176,7 @@
                             <label for="price" class="form-label">Số lượng:</label>
                             <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
                                 value="1">
+                            <div class="invalid-feedback">Vui lòng nhập số lượng</div>
                         </div>
 
                     </div>
@@ -180,6 +184,7 @@
                         <label for="editor" class="form-label">Mô tả sản phẩm:</label>
                         <div id="toolbar-container"></div>
                         <div id="editor"></div>
+                        <div class="invalid-feedback">Vui lòng nhập mô tả sản phẩm</div>
                     </div>
                 </form>
             </div>
@@ -203,7 +208,7 @@
     </div>
 </div>
 
-<script src="/js/user.js"></script>
+
 
 <script>
     // Khởi tạo ckeditor
@@ -225,3 +230,5 @@
             console.error(error);
         });
 </script>
+
+<script src="/js/user.js"></script>
