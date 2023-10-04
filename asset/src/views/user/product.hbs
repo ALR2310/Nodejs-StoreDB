@@ -8,67 +8,38 @@
     </div>
 
     <div class="row add-product-btn mb-4">
-        <div class="col-12 col-md-6">
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-addProduct">Thêm sản phẩm
-                mới</a>
+        <div class="col-5 col-md-8">
+            <a id="btn-link-add" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-addProduct">
+                Thêm sản phẩm mới</a>
+        </div>
+
+        <div class="col-7 col-md-4">
+            <form action="quan-ly-san-pham" method="get" class="">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm" name="timkiem">
+                    <button class="btn btn-primary" type="submit">Tìm Kiếm</button>
+                </div>
+            </form>
         </div>
     </div>
 
+
+
     <div class="row">
-        <!-- Card sản phẩm 1 -->
+        {{#each product}}
         <div class="col-12 col-md-6 col-lg-4 col-xl-3">
             <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
+                <img src="{{this.Images}}" class="card-img">
                 <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
+                    <p class="card-title">{{this.Productname}}</p>
                     <div class="card-btn">
                         <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
+                        <a class="btn-link-edit btn btn-info" prd="{{this.Id}}">Chỉnh Sửa</a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Thêm các card sản phẩm khác ở đây -->
+        {{/each}}
     </div>
 
     <div class="row product-show-more">
@@ -137,11 +108,12 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="modal-addProduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-addProduct" currentprd="" tabindex="-1" aria-labelledby="titleModel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-center">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm mới</h5>
+                <h5 class="modal-title" id="titleModel">Thêm sản phẩm mới</h5>
             </div>
             <div class="modal-body">
                 <!-- Form để nhập dữ liệu -->
@@ -167,7 +139,7 @@
                         <div class="col">
                             <label for="category" class="form-label">Danh mục sản phẩm:</label>
                             <select class="form-select" id="category">
-                                {{#each categories}}
+                                {{#each category}}
                                 <option value="{{this.Id}}">{{this.CategoryName}}</option>
                                 {{/each}}
                             </select>
@@ -199,7 +171,8 @@
 
                     <div class="col-auto">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button id="btnSave" type="button" class="btn btn-primary">Lưu</button>
+                        <button id="btnAdd" type="button" class="btn btn-success">Thêm</button>
+                        <button id="btnSave" type="button" class="btn btn-primary d-none">Lưu</button>
                     </div>
                 </div>
 
@@ -207,6 +180,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+
+    })
+
+
+</script>
 
 
 

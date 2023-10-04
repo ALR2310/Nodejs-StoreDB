@@ -35,7 +35,8 @@ function loadUser(req, res) {
 }
 
 module.exports = {
-    // Mở trang Index
+    // Router:/nguoi-dung/:Id
+    // mở trang index
     index(req, res) {
         //Kiểm tra người dùng hiện tại
         var userId = req.params.Id;
@@ -46,17 +47,62 @@ module.exports = {
         }
     },
 
+
+
+    // Router:/nguoi-dung/quan-ly-san-pham
     // Mở trang quản lý sản phẩm
     productManager(req, res) {
-        db.query('select * from categories', (err, result) => {
-            if (err) { console.log('Lỗi truy vấn') }
-            else {
-                res.render('user/product', { categories: result });
-            }
-        });
+        const keysearch = req.query.timkiem;
+        console.log(keysearch);
+        var sql, params;
+
+        if (keysearch != '' && keysearch != null || keysearch != undefined) {
+            sql = 'SELECT * FROM product WHERE UserId = ? and (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?)';
+            params = [res.locals.currentUser.Id, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`];
+            //Tìm kiếm sản phẩm
+            db.query(sql, params, (err, result) => {
+                if (err) { console.log('Lỗi truy vấn') }
+                else {
+                    //Lấy danh sách categories
+                    db.query('select * from categories', (err1, result1) => {
+                        if (err1) { console.log('Lỗi truy vấn 1') }
+                        else {
+                            res.render('user/product', { product: result, category: result1 });
+                        }
+                    });
+                }
+            })
+        } else {
+            db.query('select * from product where UserId = ?', [res.locals.currentUser.Id], (err, result) => {
+                if (err) { console.log('Lỗi truy vấn') }
+                else {
+
+                    db.query('select * from categories', (err1, result1) => {
+                        if (err1) { console.log('Lỗi truy vấn 1') }
+                        else {
+                            res.render('user/product', { product: result, category: result1 });
+                        }
+                    });
+                }
+            });
+        }
     },
 
-    //Post upload sản phẩm
+    //Lấy dữ liệu sản phẩm dựa trên Id
+    getProductById(req, res) {
+        const { Id } = req.body;
+        var sql = 'select product.*, productdesc.Description from product inner join productDesc on product.Id = productDesc.ProductId where product.Id = ?';
+        var params = [Id]
+
+        db.query(sql, params, (err, result) => {
+            if (err) { console.log('Lỗi truy vấn') }
+            else {
+                res.json(result[0]); //trả về dữ liệu sản phẩm
+            }
+        })
+    },
+
+    //xử lý create sản phẩm
     create(req, res) {
         // Nhập dữ liệu từ client
         const { productName, price, image, category, quantity, description } = req.body;
@@ -79,5 +125,32 @@ module.exports = {
                 })
             }
         });
-    }
+    },
+
+    //xử lý update sản phẩm
+    update(req, res) {
+        const { Id, Productname, Price, CategoryId, Quantity, Description } = req.body;
+        var sql = 'update product set categoryId = ?, productname = ?, quantity = ?, price = ? where id = ?';
+        var params = [CategoryId, Productname, Quantity, Price, Id];
+
+        db.query(sql, params, (err, result) => {
+            console.log(result);
+            if (err) { console.log('Lỗi truy vấn') }
+            else {
+                // cập nhật tiếp cho bảng productDescription
+                sql = 'update productdesc set Description = ? where ProductId = ?';
+                params = [Description, Id];
+
+                db.query(sql, params, (err1, result1) => {
+                    if (err1) { console.log('Lỗi truy vấn') }
+                    else {
+                        console.log('cập nhật thành công');
+                        return res.json({ success: true });
+                    }
+                })
+            }
+        })
+    },
+
+
 }

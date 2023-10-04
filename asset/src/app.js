@@ -39,6 +39,4 @@ app.use('/upload', uploadRouter);
 
 
 
-
-
 app.listen(port, () => console.log(`Ứng dụng chạy trên http://${host}:${port}`))

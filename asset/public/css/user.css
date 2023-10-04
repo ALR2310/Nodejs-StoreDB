@@ -67,8 +67,10 @@
 }
 
 .card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    display: -webkit-box;
+    overflow: hidden;
 }
 
 .card-text {
@@ -81,7 +83,6 @@
     border: none;
     padding: 8px 16px;
     font-size: 0.9rem;
-    margin: 5px;
 }
 
 .btn-primary:hover {
@@ -112,10 +113,10 @@
     text-align: center;
 }
 
-.add-product-btn {
+/* .add-product-btn {
     text-align: left;
     margin-bottom: 20px;
-}
+} */
 
 .view-more-btn {
     text-align: center;

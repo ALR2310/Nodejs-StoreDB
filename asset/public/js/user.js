@@ -96,7 +96,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     // Jquery thực hiện thêm sản phẩm
-    $('#btnSave').click(function () {
+    $('#btnAdd').click(function () {
 
         if ($('#productName').val() == '') {
             $('#productName').addClass('is-invalid');
@@ -141,7 +141,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     }
                     // xử lý gửi dữ liệu về api để tải lên sản phẩm
                     $.ajax({
-                        url: '/nguoi-dung/them-san-pham',
+                        url: '/nguoi-dung/createProduct',
                         method: 'POST',
                         data: JSON.stringify(data),
                         contentType: 'application/json',
@@ -150,7 +150,6 @@ window.addEventListener('DOMContentLoaded', () => {
                             if (result.success) {
                                 showSuccessToast('Thêm sản phẩm thành công');
                                 $('#modal-addProduct').modal('hide'); // ẩn modal
-
                                 // Đặt lại nội dung trong các input
                                 $('#productName').val('');
                                 $('#price').val('');
@@ -178,7 +177,87 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Gửi dữ liệu từ modal để update sản phẩm
+    $('#btnSave').click(function () {
+        const data = {
+            Id: $('#modal-addProduct').attr('currentprd'),
+            Productname: $('#productName').val(),
+            Price: $('#price').val(),
+            CategoryId: $('#category').val(),
+            Quantity: $('#quantity').val(),
+            Description: editor.getData()
+        };
 
+        $.ajax({
+            url: '/nguoi-dung/updateProduct',
+            method: 'POST',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.success) {
+                    showSuccessToast('Cập nhật sản phẩm thành công');
+                    $('#modal-addProduct').modal('hide'); // ẩn modal
+                    // Đặt lại nội dung trong các input
+                    $('#productName').val('');
+                    $('#price').val('');
+                    $('#image').val('');
+                    $('#category').val('1');
+                    $('#quantity').val('1');
+                    // Đặt lại nội dung trong ckeditor
+                    if (editor) {
+                        editor.setData(initialContent);
+                    }
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    });
+
+    // Lấy dữ liệu và đưa lên modal edit
+    const btnLinkEdits = document.querySelectorAll('.btn-link-edit');
+    btnLinkEdits.forEach((btnlinkEdit) => {
+        btnlinkEdit.addEventListener('click', function () {
+            $('#btnSave').removeClass('d-none'); //hiển thị nút lưu
+            $('#btnAdd').addClass('d-none'); //ẩn nút thêm
+            $('#modal-addProduct').modal('show');   //hiển thị modal
+            $('#titleModel').text('Chỉnh sửa sản phẩm') //đặt lại nội dung tiêu đề
+
+            const prdId = btnlinkEdit.getAttribute('prd');
+            const data = {
+                Id: prdId
+            }
+            $.ajax({
+                url: '/nguoi-dung/getProductById',
+                method: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                success: function (result) {
+                    $('#modal-addProduct').attr('currentprd', result.Id);
+                    $('#productName').val(result.Productname);
+                    $('#price').val(result.Price);
+                    $('#category').val(result.CategoryId);
+                    $('#quantity').val(result.Quantity);
+                    editor.setData(result.Description);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+    });
+
+    // Đặt lại dữ liệu và mở modal add
+    $('#btn-link-add').click(function () {
+        $('#btnSave').addClass('d-none'); //ẩn nút lưu
+        if ($('#btnAdd').hasClass('d-none')) {
+            $('#btnAdd').removeClass('d-none'); //hiển thị nút lưu
+        }
+        $('#titleModel').text('Thêm sản phẩm mới') //đặt lại nội dung tiêu đề
+    });
 });
 
 
