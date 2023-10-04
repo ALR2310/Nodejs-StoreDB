@@ -18,139 +18,134 @@ function formatDateForInput(dateStr) {
     return dateStr; // Trả về nguyên bản nếu không thể chuyển đổi
 }
 
-function loadUser(req, res) {
-    var sql = 'select * from users inner join usersinfor on users.Id = usersinfor.Id where users.Id = ?';
-    var params = [req.params.Id];
+async function loadUser(req) {
+    const connection = await db; //Khai báo kết nối
+    try {
+        const sql = 'SELECT * FROM users INNER JOIN usersinfor ON users.Id = usersinfor.Id WHERE users.Id = ?';
+        const params = [req.params.Id];
 
-    db.query(sql, params, (err, result) => {
-        if (err) { console.log('Lỗi truy vấn') }
-        else {
-            result[0].DateOfBirth = formatDate(result[0].DateOfBirth);
-            result[0].AtCreate = formatDate(result[0].AtCreate);
-            result[0].DateOfBirthInput = formatDateForInput(result[0].DateOfBirth);
-            result[0].AtCreateInput = formatDateForInput(result[0].AtCreate);
-            res.render('user/index', { user: result[0] });
+        const [rows] = await connection.execute(sql, params);
+
+        if (rows.length > 0) {
+            const result = rows[0];
+            result.DateOfBirth = formatDate(result.DateOfBirth);
+            result.AtCreate = formatDate(result.AtCreate);
+            result.DateOfBirthInput = formatDateForInput(result.DateOfBirth);
+            result.AtCreateInput = formatDateForInput(result.AtCreate);
+
+            return result;
+        } else {
+            console.log('Không tìm thấy người dùng');
         }
-    })
+    } catch (error) {
+        console.log('Lỗi truy vấn:', error);
+    }
 }
 
 module.exports = {
     // Router:/nguoi-dung/:Id
     // mở trang index
-    index(req, res) {
+    async index(req, res) {
+        const userInfor = await loadUser(req);
+
         //Kiểm tra người dùng hiện tại
         var userId = req.params.Id;
         if (userId == res.locals.currentUser.Id) {
-            loadUser(req, res);
+            res.render('user/index', { user: userInfor });
         } else {
             res.render('page404', { layout: '404layout' });
         }
     },
 
-
-
     // Router:/nguoi-dung/quan-ly-san-pham
     // Mở trang quản lý sản phẩm
-    productManager(req, res) {
+    async productManager(req, res) {
         const keysearch = req.query.timkiem;
-        console.log(keysearch);
-        var sql, params;
 
-        if (keysearch != '' && keysearch != null || keysearch != undefined) {
-            sql = 'SELECT * FROM product WHERE UserId = ? and (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?)';
+        let sql, params;
+
+        if (keysearch && keysearch !== '') {
+            sql = 'SELECT * FROM product WHERE UserId = ? AND (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?)';
             params = [res.locals.currentUser.Id, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`];
-            //Tìm kiếm sản phẩm
-            db.query(sql, params, (err, result) => {
-                if (err) { console.log('Lỗi truy vấn') }
-                else {
-                    //Lấy danh sách categories
-                    db.query('select * from categories', (err1, result1) => {
-                        if (err1) { console.log('Lỗi truy vấn 1') }
-                        else {
-                            res.render('user/product', { product: result, category: result1 });
-                        }
-                    });
-                }
-            })
         } else {
-            db.query('select * from product where UserId = ?', [res.locals.currentUser.Id], (err, result) => {
-                if (err) { console.log('Lỗi truy vấn') }
-                else {
+            sql = 'SELECT * FROM product WHERE UserId = ?';
+            params = [res.locals.currentUser.Id];
+        }
 
-                    db.query('select * from categories', (err1, result1) => {
-                        if (err1) { console.log('Lỗi truy vấn 1') }
-                        else {
-                            res.render('user/product', { product: result, category: result1 });
-                        }
-                    });
-                }
-            });
+        try {
+            const connection = await db;
+            const [result] = await connection.execute(sql, params);
+
+            const [category] = await connection.execute('SELECT * FROM categories');
+
+            res.render('user/product', { product: result, category });
+        } catch (error) {
+            console.log('Lỗi truy vấn:', error);
         }
     },
 
     //Lấy dữ liệu sản phẩm dựa trên Id
-    getProductById(req, res) {
+    async getProductById(req, res) {
         const { Id } = req.body;
         var sql = 'select product.*, productdesc.Description from product inner join productDesc on product.Id = productDesc.ProductId where product.Id = ?';
         var params = [Id]
 
-        db.query(sql, params, (err, result) => {
-            if (err) { console.log('Lỗi truy vấn') }
-            else {
-                res.json(result[0]); //trả về dữ liệu sản phẩm
-            }
-        })
+        const connection = await db;
+        const [result] = await connection.execute(sql, params);
+
+        if (result) {
+            res.json(result[0]);
+        }
     },
 
     //xử lý create sản phẩm
-    create(req, res) {
-        // Nhập dữ liệu từ client
-        const { productName, price, image, category, quantity, description } = req.body;
-        const currentUserId = res.locals.currentUser.Id;
-        var sql = 'insert into product(UserId, CategoryId, Images, Productname, Quantity, Price) value (?, ?, ?, ?, ?, ?)';
-        var params = [currentUserId, category, image, productName, quantity, price];
+    async create(req, res) {
+        try {
+            // Nhập dữ liệu từ client
+            const { productName, price, image, category, quantity, description } = req.body;
+            const currentUserId = res.locals.currentUser.Id;
 
-        db.query(sql, params, (err, result) => {
-            if (err) { console.log('Lỗi truy vấn 1') }
-            else {
-                const productId = result.insertId;
-                sql = 'insert into ProductDesc(ProductId, Description) values(?, ?)';
-                params = [productId, description];
+            const insertProductQuery = 'INSERT INTO product(UserId, CategoryId, Images, Productname, Quantity, Price) VALUES (?, ?, ?, ?, ?, ?)';
+            const productParams = [currentUserId, category, image, productName, quantity, price];
 
-                db.query(sql, params, (err1, result1) => {
-                    if (err1) { console.log('Lỗi truy vấn 2') }
-                    else {
-                        return res.json({ success: true });
-                    }
-                })
-            }
-        });
+            const connection = await db;
+            const [productResult] = await connection.execute(insertProductQuery, productParams);
+
+            const productId = productResult.insertId;
+
+            const insertProductDescQuery = 'INSERT INTO ProductDesc(ProductId, Description) VALUES (?, ?)';
+            const productDescParams = [productId, description];
+
+            await connection.execute(insertProductDescQuery, productDescParams);
+
+            return res.json({ success: true });
+        } catch (error) {
+            console.log('Lỗi truy vấn:', error);
+            return res.json({ success: false, error: 'Lỗi truy vấn' });
+        }
     },
 
     //xử lý update sản phẩm
-    update(req, res) {
-        const { Id, Productname, Price, CategoryId, Quantity, Description } = req.body;
-        var sql = 'update product set categoryId = ?, productname = ?, quantity = ?, price = ? where id = ?';
-        var params = [CategoryId, Productname, Quantity, Price, Id];
+    async update(req, res) {
+        const connection = await db; //Khai báo kết nối
+        try {
+            const { Id, Productname, Price, CategoryId, Quantity, Description } = req.body;
 
-        db.query(sql, params, (err, result) => {
-            console.log(result);
-            if (err) { console.log('Lỗi truy vấn') }
-            else {
-                // cập nhật tiếp cho bảng productDescription
-                sql = 'update productdesc set Description = ? where ProductId = ?';
-                params = [Description, Id];
+            var query = 'UPDATE product SET CategoryId = ?, Productname = ?, Quantity = ?, Price = ? WHERE Id = ?';
+            var params = [CategoryId, Productname, Quantity, Price, Id];
+            await connection.execute(query, params);
 
-                db.query(sql, params, (err1, result1) => {
-                    if (err1) { console.log('Lỗi truy vấn') }
-                    else {
-                        console.log('cập nhật thành công');
-                        return res.json({ success: true });
-                    }
-                })
-            }
-        })
-    },
+            query = 'UPDATE productdesc SET Description = ? WHERE ProductId = ?';
+            params = [Description, Id];
+            await connection.execute(query, params);
+
+            console.log('Cập nhật thành công');
+            return res.json({ success: true });
+        } catch (error) {
+            console.log('Lỗi truy vấn:', error);
+            return res.json({ success: false, error: 'Lỗi truy vấn' });
+        }
+    }
 
 
 }
