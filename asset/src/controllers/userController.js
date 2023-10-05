@@ -102,9 +102,6 @@ module.exports = {
             var params = [currentUserId, OldPassword];
             const [rows] = await connection.execute(sql, params);
 
-            console.log(params);
-            console.log('kết qả kiểm tra mk hiện tại', rows)
-
             if (rows.length > 0) {
                 // cập nhật mật khẩu người dùng
                 sql = 'update users set Password = ? where Id = ?';
