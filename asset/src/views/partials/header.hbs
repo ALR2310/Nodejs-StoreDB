@@ -87,21 +87,17 @@
                     <div class="userInfor-Avatar">
                         <img src="{{currentUser.Avatar}}" alt="" class="rounded-circle">
                     </div>
-                    <p id="userName">{{currentUser.UserName}}</p>
+                    <p id="userName">{{currentUser.DisplayName}}</p>
                 </div>
 
-                <ul class="userInfor-content">
-                    <li class="pointer">
-                        <a href="/nguoi-dung/{{currentUser.Id}}" class="link-item">Tài khoản của tôi</a>
-                    </li>
-                    <li class="pointer">
-                        <a href="/nguoi-dung/quan-ly-san-pham" class="link-item">Quản lý đơn hàng</a>
-                    </li>
-                    <li id="btnLogout" class="link-item pointer">Đăng xuất</li>
+                <div class="userInfor-content">
+                    <a href="/nguoi-dung/{{currentUser.UserId}}" class="link-item pointer">Tài khoản của tôi</a>
+                    <a href="/nguoi-dung/quan-ly-san-pham" class="link-item pointer">Quản lý đơn hàng</a>
+                    <a id="btnLogout" class="link-item pointer">Đăng xuất</a>
 
                     <div class="brtop"></div>
                     <div class="brbottom"></div>
-                </ul>
+                </div>
             </div>
 
             <a id="form-open" class="userLogin ms-4 link-item pointer">Đăng nhập/Đăng ký</a>

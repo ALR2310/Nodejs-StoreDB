@@ -3,14 +3,24 @@
 <div class="divUserInfo container mt-5">
     <div class="row">
         <div class="col-md-4">
-            <div class="user-details">
-                <img src="{{user.Avatar}}" alt="Avatar" class="img-fluid user-avatar">
+            <div class="user-details position-relative">
+                <img id="previewAvatar" src="{{user.Avatar}}" alt="Avatar" class="img-fluid user-avatar">
+
+                <div id="divUploadImg">
+                    <label for="file-avatar" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload"></i>
+                        Tải Lênh Avatar
+                    </label>
+                    <input id="file-avatar" onchange="uploadAvatarUser()" type="file" class="d-none" accept="image/*" />
+                </div>
             </div>
         </div>
         <div class="col-md-8">
             <div class="user-details">
                 <div class="d-flex justify-content-between align-items-center">
                     <div id="displayName" class="user-title">{{user.DisplayName}}</div>
+                    <input id="tblDisplayName" type="text" placeholder="Họ và tên" style="width: 337px;"
+                        class="form-control edit-input" value="{{user.DisplayName}}">
 
                     <div class="d-flex justify-content-between align-items-center">
                         <button class="btn btn-primary" id="editButton">Chỉnh sửa</button>
@@ -18,7 +28,6 @@
                         <button class="btn btn-danger" id="closeButton">Huỷ bỏ</button>
                     </div>
                 </div>
-
                 <hr>
                 <div class="row">
                     <div class="col-md-6">
@@ -49,6 +58,79 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- Phần "Nâng cao" -->
+            <div id="Useradvanced" class="mt-4 d-none">
+                <div class="accordion" id="advancedAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="emailAccordion">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#emailCollapse" aria-expanded="true" aria-controls="emailCollapse">
+                                Cập nhật Email
+                            </button>
+                        </h2>
+                        <div id="emailCollapse" class="accordion-collapse collapse show"
+                            aria-labelledby="emailAccordion" data-bs-parent="#advancedAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col-8 col-xl-8">
+                                        <label for="newEmail" class="form-label">Email mới</label>
+                                        <input type="email" class="form-control" id="newEmail"
+                                            placeholder="Nhập email mới">
+                                    </div>
+                                    <div class="col-auto col-xl-auto">
+                                        <label for="emailConfirmationCode" class="form-label">Mã xác nhận email</label>
+                                        <input type="text" class="form-control" id="emailConfirmationCode"
+                                            placeholder="Nhập mã xác nhận email">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button id="btnSaveEmail" type="submit" class="btn btn-primary mt-3">Lưu thay đổi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="passwordAccordion">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#passwordCollapse" aria-expanded="false"
+                                aria-controls="passwordCollapse">
+                                Thay đổi Mật khẩu
+                            </button>
+                        </h2>
+                        <div id="passwordCollapse" class="accordion-collapse collapse"
+                            aria-labelledby="passwordAccordion" data-bs-parent="#advancedAccordion">
+                            <div class="accordion-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="currentPassword" class="form-label">Mật khẩu cũ</label>
+                                        <input type="password" class="form-control" id="currentPassword"
+                                            placeholder="Nhập mật khẩu cũ">
+                                        <div id="err-cpwd" class="invalid-feedback">Vui lòng nhập mật khẩu cũ</div>
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                                        <input type="password" class="form-control" id="newPassword"
+                                            placeholder="Nhập mật khẩu mới">
+                                        <div class="invalid-feedback">Vui lòng nhập mật khẩu mới</div>
+                                    </div>
+
+                                    <div class="col">
+                                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                                        <input type="password" class="form-control" id="confirmPassword"
+                                            placeholder="Xác nhận mật khẩu mới">
+                                        <div id="err-cfpwd" class="invalid-feedback">Vui lòng nhập lại mật khẩu mới</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button id="btnSavePassword" type="submit" class="btn btn-primary mt-3">Lưu thay đổi</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

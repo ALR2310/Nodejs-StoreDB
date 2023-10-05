@@ -66,30 +66,32 @@ module.exports = {
 
         // khai báo kết nối
         const connection = await db;
-        
+
 
         try {
             //Kiểm tra tên đăng nhập
-            const userNameQuery = 'SELECT * FROM users WHERE UserName = ?';
-            const userNameResult = await connection.execute(userNameQuery, [username]);
-
+            var sql = 'SELECT * FROM users WHERE UserName = ?';
+            const userNameResult = await connection.execute(sql, [username]);
             if (userNameResult[0].length > 0) {
                 return res.json({ userNameExist: true });
             }
 
             //Kiểm tra email
-            const emailQuery = 'SELECT * FROM users WHERE Email = ?';
-            const emailResult = await connection.execute(emailQuery, [email]);
-
+            sql = 'SELECT * FROM users WHERE Email = ?';
+            const emailResult = await connection.execute(sql, [email]);
             if (emailResult[0].length > 0) {
                 return res.json({ emailExist: true });
             }
 
             // Tiến hành đăng ký
-            const insertQuery = 'INSERT INTO Users (UserName, Password, Email, Avatar) VALUES (?, ?, ?, ?)';
             const defaultAvatar = '/images/defaultAvatar.jpg';
+            sql = 'INSERT INTO Users (UserName, Password, Email, Avatar) VALUES (?, ?, ?, ?)';
+            const [insertUserResult] = await connection.execute(sql, [username, password, email, defaultAvatar]);
 
-            await connection.execute(insertQuery, [username, password, email, defaultAvatar]);
+            const userId = insertUserResult.insertId;
+            // Thêm thông tin chi tiết
+            sql = 'insert usersinfor(userid, displayname, gender) value (?, ?, ?)'
+            await connection.execute(sql, [userId, username, 'Nam']);
 
             res.json({ register: true });
         } catch (error) {
@@ -121,7 +123,7 @@ module.exports = {
             } else {
                 // Lấy thông tin người dùng từ cơ sở dữ liệu bằng userId
                 const userId = result[0].UserId;
-                const userQuery = 'SELECT * FROM Users WHERE Id = ?';
+                const userQuery = 'select * from users as u inner join usersinfor as ui on ui.UserId = u.Id where ui.userid = ?';
                 const [userResult, userFields] = await connection.execute(userQuery, [userId]);
 
                 if (userResult.length === 0) {

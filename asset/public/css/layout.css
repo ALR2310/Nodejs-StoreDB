@@ -276,12 +276,13 @@
     border-color: transparent transparent white transparent;
 }
 
-.userInfor-content li {
+.userInfor-content a {
+    display: block;
     white-space: nowrap;
     padding: 5px 10px;
 }
 
-.userInfor-content li:hover {
+.userInfor-content a:hover {
     background-color: var(--bs-gray-200);
 }
 

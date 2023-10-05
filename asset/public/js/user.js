@@ -1,4 +1,3 @@
-
 // hàm hiển thị các input chỉnh sửa
 window.addEventListener('DOMContentLoaded', () => {
     // Function chuyển đổi đống mở form edit trên user
@@ -10,17 +9,32 @@ window.addEventListener('DOMContentLoaded', () => {
             { label: $('#lblPhoneNumber'), input: $('#tblPhoneNumber') },
             { label: $('#lblGender'), input: $('#genderSelect') },
             { label: $('#lblDateofbirth'), input: $('#tblDateofbirth') },
-            { label: $('#lblAddress'), input: $('#tblAddress') }
+            { label: $('#lblAddress'), input: $('#tblAddress') },
+            { label: $('#displayName'), input: $('#tblDisplayName') },
         ];
+
+        // Button mở input edit
         editButton.on('click', () => {
+            if ($('#userAvatar').hasClass('d-none')) {
+                $('#userAvatar').removeClass('d-none');
+            }
+            if ($('#Useradvanced').hasClass('d-none')) {
+                $('#Useradvanced').removeClass('d-none');
+            }
+
             elementsToToggle.forEach(element => {
                 element.label.css('display', 'none');
                 element.input.css('display', 'block');
             });
             toggleButton(true);
         });
-        saveButton.on('click', closeInput);
-        closeButton.on('click', closeInput);
+
+        // Button đóng input edit
+        closeButton.on('click', () => {
+            closeInput();
+            $('#userAvatar').addClass('d-none');
+            $('#Useradvanced').addClass('d-none');
+        });
         function closeInput() {
             elementsToToggle.forEach(element => {
                 element.label.css('display', 'block');
@@ -33,6 +47,108 @@ window.addEventListener('DOMContentLoaded', () => {
             saveButton.css('display', showBtn ? 'block' : 'none');
             closeButton.css('display', showBtn ? 'block' : 'none');
         }
+        // Button cập nhật dữ liệu người dùng
+        saveButton.on('click', () => {
+            //Kiểm tra và chuyển đổi giá trị gender
+            var gioiTinh;
+            if ($('#genderSelect').val() === 'male') {
+                gioiTinh = 'Nam';
+            } else if ($('#genderSelect').val() === 'female') {
+                gioiTinh = 'Nữ';
+            } else {
+                gioiTinh = 'Khác';
+            }
+
+            //lấy dữ input
+            const data = {
+                DisplayName: $('#tblDisplayName').val(),
+                PhoneNumber: $('#tblPhoneNumber').val(),
+                DateOfBirth: $('#tblDateofbirth').val(),
+                Address: $('#tblAddress').val(),
+                Gender: gioiTinh,
+            };
+
+            $.ajax({
+                url: 'updateUser',
+                type: 'POST',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result.success) {
+                        showSuccessToast('Cập nhật thành công');
+                        closeInput();
+                        $('#userAvatar').addClass('d-none');
+                        $('#Useradvanced').addClass('d-none');
+                    } else {
+                        showErrorToast('Cập nhật thất bại');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+
+        // Function xoá error class trên password
+        function userVailidatePwd() {
+            $('#currentPassword').on('change', function () {
+                if ($('#currentPassword').hasClass('is-invalid')) {
+                    $('#currentPassword').removeClass('is-invalid');
+                }
+            });
+            $('#newPassword').on('change', function () {
+                if ($('#newPassword').hasClass('is-invalid')) {
+                    $('#newPassword').removeClass('is-invalid');
+                }
+            });
+            $('#confirmPassword').on('change', function () {
+                if ($('#confirmPassword').hasClass('is-invalid')) {
+                    $('#confirmPassword').removeClass('is-invalid');
+                }
+            });
+        } userVailidatePwd();
+
+        // Button cập nhật mật khẩu mới
+        $('#btnSavePassword').click(() => {
+            if ($('#currentPassword').val() == '') { $('#currentPassword').addClass('is-invalid'); }
+            if ($('#newPassword').val() == '') { $('#newPassword').addClass('is-invalid'); }
+            if ($('#confirmPassword').val() == '') { $('#confirmPassword').addClass('is-invalid'); }
+
+            if ($('#newPassword').val() != $('#confirmPassword').val()) {
+                $('#confirmPassword').addClass('is-invalid');
+                $('#err-cfpwd').text('Mật khẩu xác nhận không trùng nhau');
+                return;
+            }
+
+            const data = {
+                OldPassword: $('#currentPassword').val(),
+                NewPassword: $('#newPassword').val(),
+            };
+
+            $.ajax({
+                url: 'updaePasswordUser',
+                type: 'POST',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if(result.notExist) {
+                        $('#currentPassword').addClass('is-invalid');
+                        $('#err-cpwd').text('Mật khẩu cũ không chính xác');
+                    }
+
+                    if (result.success) {
+                        showSuccessToast('Cập nhật mật khẩu thành công');
+                    } else {
+                        showErrorToast('Cập nhật mật khẩu thất bại');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
     } toggleInputField();
 
     // Code đặt css focus cho thẻ div tagInput
@@ -47,23 +163,24 @@ window.addEventListener('DOMContentLoaded', () => {
     function addtagsearchinput() {
         const tagsContainer = document.querySelector('.tags');
         const tagInput = document.querySelector('#tagInput');
-
-        tagInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter' && tagInput.value.trim() !== '') {
-                const tag = document.createElement('div');
-                tag.className = 'tag';
-                tag.textContent = tagInput.value;
-                const closeButton = document.createElement('span');
-                closeButton.className = 'close-button';
-                closeButton.innerHTML = '&#10006;';
-                closeButton.addEventListener('click', function () {
-                    tagsContainer.removeChild(tag);
-                });
-                tag.appendChild(closeButton);
-                tagsContainer.appendChild(tag);
-                tagInput.value = '';
-            }
-        });
+        if (tagInput) {
+            tagInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' && tagInput.value.trim() !== '') {
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.textContent = tagInput.value;
+                    const closeButton = document.createElement('span');
+                    closeButton.className = 'close-button';
+                    closeButton.innerHTML = '&#10006;';
+                    closeButton.addEventListener('click', function () {
+                        tagsContainer.removeChild(tag);
+                    });
+                    tag.appendChild(closeButton);
+                    tagsContainer.appendChild(tag);
+                    tagInput.value = '';
+                }
+            });
+        }
     } addtagsearchinput();
 
     function clearErrorMsgInput() {
@@ -93,7 +210,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
     } clearErrorMsgInput();
-
 
     // Jquery thực hiện thêm sản phẩm
     $('#btnAdd').click(function () {
@@ -244,7 +360,7 @@ window.addEventListener('DOMContentLoaded', () => {
             $('#btnAdd').addClass('d-none'); //ẩn nút thêm
             $('#modal-addProduct').modal('show');   //hiển thị modal
             $('#titleModel').text('Chỉnh sửa sản phẩm') //đặt lại nội dung tiêu đề
-            if($('#divbtnDelete').hasClass('d-none')) {
+            if ($('#divbtnDelete').hasClass('d-none')) {
                 $('#divbtnDelete').removeClass('d-none'); //hiển thị nút xoá
             }
 
@@ -333,6 +449,67 @@ function createTagsFromArray(tagsArray) {
             tagsContainer.appendChild(tagDiv);
         });
     }
+}
+
+// Upload avatar cho user
+function uploadAvatarUser() {
+    // Xem trước hình ảnh
+    const input = document.getElementById('file-avatar');
+    const preview = document.getElementById('previewAvatar');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+
+
+    // Xử lý tải lên hình ảnh sản phẩm
+    const files = document.querySelector('#file-avatar').files;
+    const formData = new FormData();
+
+    for (const file of files) {
+        formData.append('file', file);
+    };
+
+    $.ajax({
+        url: '/upload/image',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+            // Xử lý cập nhật đường dẫn cho avatar user
+            var pathAvatar = res.uploadedFilePath;
+            const data = {
+                Avatar: pathAvatar,
+            };
+
+            $.ajax({
+                url: 'updateAvatarUser',
+                type: 'POST',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (result) {
+                    if (result.success) {
+                        showSuccessToast('Cập nhật avatar thành công');
+                    } else {
+                        showErrorToast('Cập nhật avatar thất bại');
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            })
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }
 
 

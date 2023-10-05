@@ -21,7 +21,7 @@ function formatDateForInput(dateStr) {
 async function loadUser(req) {
     const connection = await db; //Khai báo kết nối
     try {
-        const sql = 'SELECT * FROM users INNER JOIN usersinfor ON users.Id = usersinfor.Id WHERE users.Id = ?';
+        const sql = 'select * from users as u inner join usersinfor as ui on ui.UserId = u.Id where ui.UserId = ?';
         const params = [req.params.Id];
 
         const [rows] = await connection.execute(sql, params);
@@ -50,10 +50,73 @@ module.exports = {
 
         //Kiểm tra người dùng hiện tại
         var userId = req.params.Id;
-        if (userId == res.locals.currentUser.Id) {
+        if (userId == res.locals.currentUser.UserId) {
             res.render('user/index', { user: userInfor });
         } else {
             res.render('page404', { layout: '404layout' });
+        }
+    },
+
+    async updateUser(req, res) {
+        const currentUserId = res.locals.currentUser.UserId;
+        const { DisplayName, PhoneNumber, DateOfBirth, Address, Gender } = req.body;
+
+        const connection = await db;
+        try {
+            // Cật nhật thông tin người dùng
+            var sql = 'update usersinfor set DisplayName = ?, PhoneNumber = ?, Gender = ?, DateOfBirth = ?, Address = ? where Id = ?';
+            var params = [DisplayName, PhoneNumber, Gender, DateOfBirth, Address, currentUserId];
+            await connection.execute(sql, params);
+
+            res.json({ success: true });
+        } catch (err) {
+            console.log('Lỗi truy vấn:', err);
+        }
+    },
+
+    async updateAvatarUser(req, res) {
+        const currentUserId = res.locals.currentUser.UserId;
+        const { Avatar } = req.body;
+
+        const connection = await db;
+        try {
+            // cập nhật avatar người dùng
+            var sql = 'update users set Avatar = ? where Id = ?';
+            var params = [Avatar, currentUserId];
+            await connection.execute(sql, params);
+
+            res.json({ success: true });
+        } catch (err) {
+            console.log('Lỗi truy vấn:', err);
+        }
+    },
+
+    async updaePasswordUser(req, res) {
+        const currentUserId = res.locals.currentUser.UserId;
+        const { OldPassword, NewPassword } = req.body;
+
+        const connection = await db;
+        try {
+            // Kiểm tra mật khẩu hiện tại
+            var sql = 'select * from users where Id = ? and Password = ?';
+            var params = [currentUserId, OldPassword];
+            const [rows] = await connection.execute(sql, params);
+
+            console.log(params);
+            console.log('kết qả kiểm tra mk hiện tại', rows)
+
+            if (rows.length > 0) {
+                // cập nhật mật khẩu người dùng
+                sql = 'update users set Password = ? where Id = ?';
+                params = [NewPassword, currentUserId];
+                await connection.execute(sql, params);
+
+                res.json({ success: true, notExist: false });
+            } else {
+                res.json({ success: false, notExist: true });
+            }
+        } catch (err) {
+            console.log('Lỗi truy vấn:', err);
         }
     },
 
@@ -66,10 +129,10 @@ module.exports = {
 
         if (keysearch && keysearch !== '') {
             sql = 'SELECT * FROM product WHERE UserId = ? AND (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?)';
-            params = [res.locals.currentUser.Id, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`];
+            params = [res.locals.currentUser.UserId, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`];
         } else {
             sql = 'SELECT * FROM product WHERE UserId = ?';
-            params = [res.locals.currentUser.Id];
+            params = [res.locals.currentUser.UserId];
         }
 
         try {
@@ -113,7 +176,7 @@ module.exports = {
         try {
             // Nhập dữ liệu từ client
             const { productName, price, image, category, quantity, description, tags } = req.body;
-            const currentUserId = res.locals.currentUser.Id;
+            const currentUserId = res.locals.currentUser.UserId;
 
             //Thêm sản phẩm
             var sql = 'INSERT INTO product(UserId, CategoryId, Images, Productname, Quantity, Price) VALUES (?, ?, ?, ?, ?, ?)';

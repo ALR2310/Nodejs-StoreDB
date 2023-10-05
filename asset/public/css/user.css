@@ -1,5 +1,5 @@
 .divUserInfo {
-    margin-bottom: 90px;
+    margin-bottom: 97px;
 }
 
 .user-details {
@@ -195,4 +195,31 @@
     border-color: #86b7fe;
     outline: 0;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* //////////////////////// */
+
+.img-fluid.user-avatar:hover + #divUploadImg {
+    display: block;
+}
+
+
+#divUploadImg {
+    position: absolute;
+    bottom: 35px;
+    left: 100px;
+    display: none;
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+
+.custom-file-upload {
+    position: relative;
+    top: -4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 10px;
 }
