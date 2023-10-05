@@ -4,7 +4,7 @@
 
 <div class="container mt-5">
     <div class="row product-heading">
-        <h2>Quản lý sản phẩm</h2>
+        <h2>Sản phẩm của bạn</h2>
     </div>
 
     <div class="row add-product-btn mb-4">
@@ -40,70 +40,6 @@
             </div>
         </div>
         {{/each}}
-    </div>
-
-    <div class="row product-show-more">
-        <!-- Card sản phẩm 1 -->
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div class="card product-card">
-                <img src="/images/product1.jpg" class="card-img">
-                <div class="card-body">
-                    <h5 class="card-title">Sản phẩm 1</h5>
-                    <div class="card-btn">
-                        <a href="#" class="btn btn-primary">Xem hàng</a>
-                        <a href="#" class="btn btn-info">Chỉnh Sửa</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Thêm các card sản phẩm khác ở đây -->
-    </div>
-
-    <!-- Nút Xem thêm sản phẩm -->
-    <div class="row view-more-btn">
-        <div class="col">
-            <button class="btn btn-primary">Xem thêm sản phẩm</button>
-        </div>
     </div>
 </div>
 
@@ -161,15 +97,22 @@
                 </form>
             </div>
             <div class="modal-footer">
+
                 <div class="row w-100 align-items-center">
-                    <div class="col">
+                    
+
+                    <div class="col ps-0">
                         <div class="tag-input border">
                             <div class="tags"></div>
                             <input type="text" id="tagInput" placeholder="Thêm nhãn tìm kiếm">
                         </div>
                     </div>
 
-                    <div class="col-auto">
+                    <div id="divbtnDelete" class="col-auto">
+                        <button id="btnDelete" type="button" class="btn btn-danger">Xoá sản phẩm</button>
+                    </div>
+
+                    <div class="col-auto pe-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button id="btnAdd" type="button" class="btn btn-success">Thêm</button>
                         <button id="btnSave" type="button" class="btn btn-primary d-none">Lưu</button>
@@ -183,6 +126,7 @@
 
 <script>
     window.addEventListener('DOMContentLoaded', function () {
+
 
     })
 

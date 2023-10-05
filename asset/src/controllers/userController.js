@@ -93,31 +93,53 @@ module.exports = {
         const connection = await db;
         const [result] = await connection.execute(sql, params);
 
+        sql = 'select tagname from tag where ProductId = ?';
+        const [listTags] = await connection.execute(sql, params);
+
+        var tagsArray = [];
+        if (listTags) {
+            // Trích xuất các tên tags thành mảng
+            tagsArray = listTags.map(tag => tag.tagname);
+        }
+
         if (result) {
-            res.json(result[0]);
+            res.json({ product: result[0], tags: tagsArray });
         }
     },
 
     //xử lý create sản phẩm
     async create(req, res) {
+        const connection = await db; //Khai báo kết nối
         try {
             // Nhập dữ liệu từ client
-            const { productName, price, image, category, quantity, description } = req.body;
+            const { productName, price, image, category, quantity, description, tags } = req.body;
             const currentUserId = res.locals.currentUser.Id;
 
-            const insertProductQuery = 'INSERT INTO product(UserId, CategoryId, Images, Productname, Quantity, Price) VALUES (?, ?, ?, ?, ?, ?)';
-            const productParams = [currentUserId, category, image, productName, quantity, price];
+            //Thêm sản phẩm
+            var sql = 'INSERT INTO product(UserId, CategoryId, Images, Productname, Quantity, Price) VALUES (?, ?, ?, ?, ?, ?)';
+            var params = [currentUserId, category, image, productName, quantity, price];
+            const [productResult] = await connection.execute(sql, params);
 
-            const connection = await db;
-            const [productResult] = await connection.execute(insertProductQuery, productParams);
-
+            // Lấy Id sản phẩm vừa thêm
             const productId = productResult.insertId;
 
-            const insertProductDescQuery = 'INSERT INTO ProductDesc(ProductId, Description) VALUES (?, ?)';
-            const productDescParams = [productId, description];
+            // Thêm mô tả sản phẩm
+            sql = 'INSERT INTO ProductDesc(ProductId, Description) VALUES (?, ?)';
+            params = [productId, description];
+            await connection.execute(sql, params);
 
-            await connection.execute(insertProductDescQuery, productDescParams);
+            // Thêm các thẻ tags tìm kiếm
+            // Lặp qua mảng tags và thêm từng tag vào bảng
+            for (const tag of tags) {
+                sql = 'insert tag(productid, TagName) value(?, ?)';
+                params = [productId, tag];
 
+                const [tagsResult] = await connection.execute(sql, params);
+                if (!tagsResult) {
+                    console.log(`Không thể thêm tag: ${tag}`);
+                }
+            }
+            // Trả về kết quả cho client
             return res.json({ success: true });
         } catch (error) {
             console.log('Lỗi truy vấn:', error);
@@ -129,23 +151,44 @@ module.exports = {
     async update(req, res) {
         const connection = await db; //Khai báo kết nối
         try {
-            const { Id, Productname, Price, CategoryId, Quantity, Description } = req.body;
+            const { Id, Productname, Price, CategoryId, Quantity, Description, tags } = req.body;
 
+            // Cập nhật sản phẩm
             var query = 'UPDATE product SET CategoryId = ?, Productname = ?, Quantity = ?, Price = ? WHERE Id = ?';
             var params = [CategoryId, Productname, Quantity, Price, Id];
             await connection.execute(query, params);
 
+            // Cập nhật mô tả sản phẩm
             query = 'UPDATE productdesc SET Description = ? WHERE ProductId = ?';
             params = [Description, Id];
             await connection.execute(query, params);
 
-            console.log('Cập nhật thành công');
+            // Cập nhật các tags
+            // Lấy danh sách tags hiện tại của sản phẩm
+            query = 'SELECT TagName FROM Tag WHERE ProductId = ?';
+            const [currentTagsResult] = await connection.execute(query, [Id]);
+            const currentTags = currentTagsResult.map(tag => tag.TagName);
+
+            // Lặp qua danh sách tags mới và thêm những tag mới
+            for (const tag of tags) {
+                if (!currentTags.includes(tag)) {
+                    query = 'INSERT INTO Tag(ProductId, TagName) VALUES (?, ?)';
+                    await connection.execute(query, [Id, tag]);
+                }
+            }
+            // Xóa các tags không còn trong danh sách tags mới
+            for (const currentTag of currentTags) {
+                if (!tags.includes(currentTag)) {
+                    query = 'DELETE FROM Tag WHERE ProductId = ? AND TagName = ?';
+                    await connection.execute(query, [Id, currentTag]);
+                }
+            }
+
+            // Trả thông báo về clinet
             return res.json({ success: true });
         } catch (error) {
             console.log('Lỗi truy vấn:', error);
             return res.json({ success: false, error: 'Lỗi truy vấn' });
         }
-    }
-
-
+    },
 }

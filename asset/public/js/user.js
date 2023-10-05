@@ -131,6 +131,17 @@ window.addEventListener('DOMContentLoaded', () => {
                 contentType: false,
                 processData: false,
                 success: function (res) {
+                    // Lấy các tags
+                    var tagsArray = [];
+                    $('.tags .tag').each(function () {
+                        var tagText = $(this).contents().filter(function () {
+                            return this.nodeType === Node.TEXT_NODE;
+                        }).text().trim(); // Lấy nội dung văn bản và loại bỏ khoảng trắng thừa
+                        tagsArray.push(tagText);
+                    });
+                    console.log(tagsArray)
+
+                    // khai báo dữ liệu
                     const data = {
                         productName: $('#productName').val(),
                         price: $('#price').val(),
@@ -138,10 +149,11 @@ window.addEventListener('DOMContentLoaded', () => {
                         category: $('#category').val(),
                         quantity: $('#quantity').val(),
                         description: $('#editor').html(),
+                        tags: tagsArray,
                     }
                     // xử lý gửi dữ liệu về api để tải lên sản phẩm
                     $.ajax({
-                        url: '/nguoi-dung/createProduct',
+                        url: 'quan-ly-san-pham/createProduct',
                         method: 'POST',
                         data: JSON.stringify(data),
                         contentType: 'application/json',
@@ -171,25 +183,33 @@ window.addEventListener('DOMContentLoaded', () => {
                     console.log(error);
                 }
             });
-
-
-
         }
     });
 
-    // Gửi dữ liệu từ modal để update sản phẩm
+    // Jquery thực hiện cập nhật sản phẩm
     $('#btnSave').click(function () {
+        // Lấy các tags
+        var tagsArray = [];
+        $('.tags .tag').each(function () {
+            var tagText = $(this).contents().filter(function () {
+                return this.nodeType === Node.TEXT_NODE;
+            }).text().trim(); // Lấy nội dung văn bản và loại bỏ khoảng trắng thừa
+            tagsArray.push(tagText);
+        });
+        console.log(tagsArray)
+
         const data = {
             Id: $('#modal-addProduct').attr('currentprd'),
             Productname: $('#productName').val(),
             Price: $('#price').val(),
             CategoryId: $('#category').val(),
             Quantity: $('#quantity').val(),
-            Description: editor.getData()
+            Description: editor.getData(),
+            tags: tagsArray,
         };
 
         $.ajax({
-            url: '/nguoi-dung/updateProduct',
+            url: '/nguoi-dung/quan-ly-san-pham/updateProduct',
             method: 'POST',
             contentType: 'application/json',
             dataType: 'json',
@@ -224,24 +244,34 @@ window.addEventListener('DOMContentLoaded', () => {
             $('#btnAdd').addClass('d-none'); //ẩn nút thêm
             $('#modal-addProduct').modal('show');   //hiển thị modal
             $('#titleModel').text('Chỉnh sửa sản phẩm') //đặt lại nội dung tiêu đề
+            if($('#divbtnDelete').hasClass('d-none')) {
+                $('#divbtnDelete').removeClass('d-none'); //hiển thị nút xoá
+            }
 
             const prdId = btnlinkEdit.getAttribute('prd');
             const data = {
                 Id: prdId
             }
             $.ajax({
-                url: '/nguoi-dung/getProductById',
+                url: '/nguoi-dung/quan-ly-san-pham/getProductbyId',
                 method: 'POST',
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify(data),
-                success: function (result) {
-                    $('#modal-addProduct').attr('currentprd', result.Id);
-                    $('#productName').val(result.Productname);
-                    $('#price').val(result.Price);
-                    $('#category').val(result.CategoryId);
-                    $('#quantity').val(result.Quantity);
-                    editor.setData(result.Description);
+                success: function (response) {
+                    if (response.product) {
+                        const result = response.product;
+                        // Gán nội dung lên các input
+                        $('#modal-addProduct').attr('currentprd', result.Id);
+                        $('#productName').val(result.Productname);
+                        $('#price').val(result.Price);
+                        $('#category').val(result.CategoryId);
+                        $('#quantity').val(result.Quantity);
+                        editor.setData(result.Description);
+                    }
+                    if (response.tags) {
+                        createTagsFromArray(response.tags);
+                    }
                 },
                 error: function (err) {
                     console.log(err);
@@ -253,6 +283,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Đặt lại dữ liệu và mở modal add
     $('#btn-link-add').click(function () {
         $('#btnSave').addClass('d-none'); //ẩn nút lưu
+        $('#divbtnDelete').addClass('d-none'); //ẩn nút xoá
         if ($('#btnAdd').hasClass('d-none')) {
             $('#btnAdd').removeClass('d-none'); //hiển thị nút lưu
         }
@@ -260,24 +291,52 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// hàm sử lý nút xoá tags
+function closetagsbtn(element) {
+    const tagElement = element.parentElement; // Lấy phần tử div có class "tag"
+    const tagsContainer = document.querySelector('.tags');
 
-document.querySelector('.view-more-btn button').addEventListener('click', function () {
-    document.querySelector('.product-show-more').classList.toggle('active');
-    document.querySelector('.view-more-btn button').textContent = 'Ẩn bớt sản phẩm';
-});
+    tagsContainer.removeChild(tagElement); // Xóa thẻ ra khỏi container
+}
+// Hàm sử lý tạo tags từ một mảng các tags
+function createTagsFromArray(tagsArray) {
+    const tagsContainer = document.querySelector('.tags'); // Chọn container .tags
+
+    // Xóa tất cả các thẻ tags hiện có trong container
+    while (tagsContainer.firstChild) {
+        tagsContainer.removeChild(tagsContainer.firstChild);
+    }
+
+    // Nếu mảng tagsArray không rỗng, thêm các thẻ tags mới
+    if (tagsArray.length > 0) {
+        tagsArray.forEach(tagText => {
+            // Tạo phần tử div.tag
+            const tagDiv = document.createElement('div');
+            tagDiv.classList.add('tag');
+
+            // Tạo nút "✖" và thêm sự kiện cho nó
+            const closeButton = document.createElement('span');
+            closeButton.classList.add('close-button');
+            closeButton.textContent = '✖';
+            closeButton.onclick = function () {
+                closetagsbtn(this);
+            };
+
+            // Tạo nội dung của tag
+            const tagContent = document.createTextNode(tagText);
+
+            // Gắn các phần tử vào div.tag
+            tagDiv.appendChild(tagContent);
+            tagDiv.appendChild(closeButton);
+
+            // Thêm div.tag vào container
+            tagsContainer.appendChild(tagDiv);
+        });
+    }
+}
 
 
-// // Sử dụng jQuery để lấy nội dung của các thẻ tag (loại bỏ dấu "X")
-// var tagsArray = [];
 
-// $('.tags .tag').each(function () {
-//     var tagText = $(this).contents().filter(function () {
-//         return this.nodeType === Node.TEXT_NODE;
-//     }).text().trim(); // Lấy nội dung văn bản và loại bỏ khoảng trắng thừa
-//     tagsArray.push(tagText);
-// });
 
-// // tagsArray bây giờ chứa chỉ nội dung của các thẻ tag
-// console.log(tagsArray);
 
 
