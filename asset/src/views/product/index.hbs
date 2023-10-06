@@ -4,15 +4,14 @@
     <div class="row">
         <div class="col-xl-6">
             <div class="product-imgs">
-                <img src="/images/product1.jpg" alt="">
+                <img src="{{product.Images}}" alt="">
             </div>
         </div>
 
         <div class="col-xl-6">
             <div class="product-info">
-                <h3 class="product-infor_title mt-4 me-3">Bàn phím giả cơ gaming kèm chuột có dây chế độ led 7 màu tiện
-                    lợi dành cho máy tính,game thủ,văn phòng</h3>
-                <p class="product-infor_price">30.000.000đ</p>
+                <h3 class="product-infor_title mt-4 me-3">{{product.Productname}}</h3>
+                <p class="product-infor_price">{{product.Price}}đ</p>
 
                 <div class="row mb-4 align-items-center">
                     <div class="col-auto">Số lượng:</div>
@@ -23,7 +22,7 @@
                             <button id="quantityPlus" class="btn btn-primary" type="button">+</button>
                         </div>
                     </div>
-                    <div class="col">1 sản phẩm có sẵn</div>
+                    <div class="col">{{product.Quantity}} sản phẩm có sẵn</div>
                 </div>
 
                 <script>
@@ -72,12 +71,35 @@
     </div>
 </div>
 
-<div class="container bg-white mt-3">
-    <h2 class="product-title">Mô tả sản phẩm</h2>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-8 bg-white position-relative">
+            <div id="product-description" class="row">
+                {{{product.Description}}}
+            </div>
+            <div class="divreadmore">
+                <button id="btn-readmore" class="btn btn-light">Xem thêm▼</button>
+            </div>
+        </div>
+        <div class="col-auto">...</div>
 
-    <div class="product-desc">
-        
     </div>
+
+
 </div>
+
+
+
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        $('#btn-readmore').click(function () {
+            $('#product-description').css('max-height', '100%');
+            $('.divreadmore').addClass('d-none');
+        })
+    });
+
+
+
+</script>
 
 <script src="/js/product.js"></script>

@@ -8,7 +8,7 @@ const mysql = require('mysql2/promise');
 async function LoadProduct() {
     const connection = await db;
     try {
-        const [result] = await connection.execute('select * from product');
+        const [result] = await connection.execute('select * from product where Status = "Active"');
         return result;
     } catch (err) {
         console.log('Lỗi kết nối đến CSDL: ' + err)

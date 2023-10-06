@@ -1,3 +1,7 @@
+img {
+    width: 100%;
+}
+
 .product-imgs {
     display: flex;
     justify-content: center;
@@ -33,13 +37,6 @@
     margin-right: 20px;
 }
 
-.product-title {
-    font-size: 24px;
-    padding: 20px;
-    display: block;
-    text-align: center;
-}
-
 #divQuantity {
     max-width: 120px;
 }
@@ -48,3 +45,18 @@
     text-align: center;
 }
 
+#product-description {
+    max-height: 1000px;
+    overflow: hidden;
+}
+
+.divreadmore {
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 100%;
+    background: linear-gradient(to bottom, transparent, white);
+}
