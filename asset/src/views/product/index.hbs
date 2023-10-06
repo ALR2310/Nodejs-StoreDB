@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-xl-6">
             <div class="product-imgs">
-                <img src="/imgs/product1.jpg" alt="">
+                <img src="/images/product1.jpg" alt="">
             </div>
         </div>
 
@@ -13,6 +13,52 @@
                 <h3 class="product-infor_title mt-4 me-3">Bàn phím giả cơ gaming kèm chuột có dây chế độ led 7 màu tiện
                     lợi dành cho máy tính,game thủ,văn phòng</h3>
                 <p class="product-infor_price">30.000.000đ</p>
+
+                <div class="row mb-4 align-items-center">
+                    <div class="col-auto">Số lượng:</div>
+                    <div class="col-auto ps-0 pe-0">
+                        <div id="divQuantity" class="input-group">
+                            <button id="quantityMinus" class="btn btn-primary" type="button">−</button>
+                            <input id="quantityInput" type="number" min="1" max="100" class="form-control" value="1">
+                            <button id="quantityPlus" class="btn btn-primary" type="button">+</button>
+                        </div>
+                    </div>
+                    <div class="col">1 sản phẩm có sẵn</div>
+                </div>
+
+                <script>
+                    window.addEventListener('DOMContentLoaded', function () {
+                        const quantityInput = $('#quantityInput')
+                        const quantityMinus = $('#quantityMinus')
+                        const quantityPlus = $('#quantityPlus')
+
+                        quantityMinus.click(() => {
+                            let quantity = parseInt(quantityInput.val());
+                            if (quantity > 1) {
+                                quantity--;
+                                quantityInput.val(quantity);
+                            }
+                        });
+                        quantityPlus.click(() => {
+                            let quantity = parseInt(quantityInput.val());
+                            if (quantity < 100) {
+                                quantity++;
+                                quantityInput.val(quantity);
+                            }
+                        });
+                        quantityInput.on('change', () => {
+                            let quantity = parseInt(quantityInput.val());
+                            if (isNaN(quantity) || quantity < 1) {
+                                quantity = 1;
+                            } else if (quantity > 100) {
+                                quantity = 100;
+                            }
+                            quantityInput.val(quantity);
+                        });
+                    })
+
+
+                </script>
             </div>
 
             <div class="product-infor_btn">
@@ -26,8 +72,8 @@
     </div>
 </div>
 
-<div class="container bg-white">
-    <h2 class="product-title">Chi tiết sản phẩm</h2>
+<div class="container bg-white mt-3">
+    <h2 class="product-title">Mô tả sản phẩm</h2>
 
     <div class="product-desc">
         

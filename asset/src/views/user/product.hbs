@@ -57,7 +57,9 @@
                     <div class="row mb-3">
                         <div class="col">
                             <label for="productName" class="form-label">Tên sản phẩm:</label>
-                            <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm">
+                            <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm"
+                                onkeyup="ChangeToSlug()">
+                            <input type="text" class="form-control d-none" id="productSlug" placeholder="slug">
                             <div class="invalid-feedback">Vui lòng nhập tên sản phẩm</div>
                         </div>
                         <div class="col-3">
@@ -99,7 +101,7 @@
             <div class="modal-footer">
 
                 <div class="row w-100 align-items-center">
-                    
+
 
                     <div class="col ps-0">
                         <div class="tag-input border">
@@ -127,10 +129,7 @@
 <script>
     window.addEventListener('DOMContentLoaded', function () {
 
-
-    })
-
-
+    });
 </script>
 
 

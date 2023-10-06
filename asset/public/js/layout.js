@@ -91,6 +91,7 @@ if (coookieTonTai) {
 // Đăng xuất tài khoản/xoá cookie
 document.getElementById('btnLogout').addEventListener('click', () => {
     xoaCookie('authToken');
+    window.location.href = '/';
 });
 
 // Function kiểm tra mật khẩu

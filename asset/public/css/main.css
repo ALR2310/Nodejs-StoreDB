@@ -43,6 +43,7 @@ body {
     background-color: #f8f9fa !important;
 }
 
+/* Đặt thanh trượt mặt định */
 ::-webkit-scrollbar {
     width: 6px;
     background: none;
@@ -56,6 +57,13 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/* Xoá 2 nút tăng giảm trong trường input type number */
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .pointer {

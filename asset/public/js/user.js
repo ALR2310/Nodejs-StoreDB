@@ -133,7 +133,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 success: function (result) {
-                    if(result.notExist) {
+                    if (result.notExist) {
                         $('#currentPassword').addClass('is-invalid');
                         $('#err-cpwd').text('Mật khẩu cũ không chính xác');
                     }
@@ -255,7 +255,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         }).text().trim(); // Lấy nội dung văn bản và loại bỏ khoảng trắng thừa
                         tagsArray.push(tagText);
                     });
-                    console.log(tagsArray)
 
                     // khai báo dữ liệu
                     const data = {
@@ -266,6 +265,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         quantity: $('#quantity').val(),
                         description: $('#editor').html(),
                         tags: tagsArray,
+                        slugs: $('#productSlug').val(),
                     }
                     // xử lý gửi dữ liệu về api để tải lên sản phẩm
                     $.ajax({
@@ -352,6 +352,34 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Jquery thực hiện xoá sản phẩm
+    $('#btnDelete').click(function () {
+        const data = {
+            Id: $('#modal-addProduct').attr('currentprd')
+        }
+
+        $.ajax({
+            url: 'quan-ly-san-pham/deleteProduct',
+            method: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (result) {
+                if (result.success) {
+                    showSuccessToast('Xoá thành công');
+                    $('#modal-addProduct').modal('hide'); // ẩn modal
+
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    });
+
     // Lấy dữ liệu và đưa lên modal edit
     const btnLinkEdits = document.querySelectorAll('.btn-link-edit');
     btnLinkEdits.forEach((btnlinkEdit) => {
@@ -383,6 +411,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         $('#price').val(result.Price);
                         $('#category').val(result.CategoryId);
                         $('#quantity').val(result.Quantity);
+                        $('#productSlug').val(result.Slugs);
                         editor.setData(result.Description);
                     }
                     if (response.tags) {
@@ -512,7 +541,39 @@ function uploadAvatarUser() {
     });
 }
 
-
+// function chuyển đổi tên sản phẩm thành dạng url slug
+function ChangeToSlug() {
+    var slug;
+    //Lấy text từ thẻ input title 
+    slug = document.getElementById("productName").value;
+    slug = slug.toLowerCase();
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+    //Xóa các ký tự đặt biệt
+    slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+    //Đổi khoảng trắng thành ký tự gạch ngang
+    slug = slug.replace(/ /gi, "-");
+    //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+    //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+    slug = slug.replace(/\-\-\-\-\-/gi, '-');
+    slug = slug.replace(/\-\-\-\-/gi, '-');
+    slug = slug.replace(/\-\-\-/gi, '-');
+    slug = slug.replace(/\-\-/gi, '-');
+    // Thêm một chuỗi số ngẫu nhiên 4 số vào cuối slug
+    var randomNumber = Math.floor(Math.random() * 10000); // Số ngẫu nhiên từ 0 đến 9999
+    slug = slug + '-' + randomNumber;
+    //Xóa các ký tự gạch ngang ở đầu và cuối
+    slug = '@' + slug + '@';
+    slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+    //In slug ra textbox có id “slug”
+    document.getElementById('productSlug').value = slug;
+}
 
 
 

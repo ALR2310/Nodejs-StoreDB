@@ -125,11 +125,11 @@ module.exports = {
         let sql, params;
 
         if (keysearch && keysearch !== '') {
-            sql = 'SELECT * FROM product WHERE UserId = ? AND (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?)';
-            params = [res.locals.currentUser.UserId, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`];
+            sql = 'SELECT * FROM product WHERE UserId = ? AND (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?) and Status = ?';
+            params = [res.locals.currentUser.UserId, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`, 'Active'];
         } else {
-            sql = 'SELECT * FROM product WHERE UserId = ?';
-            params = [res.locals.currentUser.UserId];
+            sql = 'SELECT * FROM product WHERE UserId = ? and Status = ?';
+            params = [res.locals.currentUser.UserId, 'Active'];
         }
 
         try {
@@ -172,12 +172,12 @@ module.exports = {
         const connection = await db; //Khai báo kết nối
         try {
             // Nhập dữ liệu từ client
-            const { productName, price, image, category, quantity, description, tags } = req.body;
+            const { productName, price, image, category, quantity, description, tags, slugs } = req.body;
             const currentUserId = res.locals.currentUser.UserId;
 
             //Thêm sản phẩm
-            var sql = 'INSERT INTO product(UserId, CategoryId, Images, Productname, Quantity, Price) VALUES (?, ?, ?, ?, ?, ?)';
-            var params = [currentUserId, category, image, productName, quantity, price];
+            var sql = 'INSERT INTO product(UserId, CategoryId, Images, Productname, Quantity, Price, Slugs) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            var params = [currentUserId, category, image, productName, quantity, price, slugs];
             const [productResult] = await connection.execute(sql, params);
 
             // Lấy Id sản phẩm vừa thêm
@@ -249,6 +249,20 @@ module.exports = {
         } catch (error) {
             console.log('Lỗi truy vấn:', error);
             return res.json({ success: false, error: 'Lỗi truy vấn' });
+        }
+    },
+
+    async delete(req, res) {
+        const connection = await db; //Khai báo kết nối
+        try {
+            const { Id } = req.body;
+            // Xóa sản phẩm
+            await connection.execute('update product set status = ? where Id = ?', ['Disable', Id]);
+
+            // Trả kết quả về client
+            return res.json({ success: true });
+        } catch (error) {
+            console.log('Lỗi truy vấn:', error);
         }
     },
 }

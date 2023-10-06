@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/userController');
+const homeCtrl = require('../controllers/homeController');
 
+router.use(homeCtrl.checkCurrentUser);
 
 router.get('/quan-ly-san-pham', userCtrl.productManager);
 router.post('/quan-ly-san-pham/createProduct', userCtrl.create);
 router.post('/quan-ly-san-pham/updateProduct', userCtrl.update);
 router.post('/quan-ly-san-pham/getProductbyId', userCtrl.getProductById);
-// router.post('/quan-ly-san-pham/deleteProduct', userCtrl.delete);
+router.post('/quan-ly-san-pham/deleteProduct', userCtrl.delete);
 
 router.post('/updateUser', userCtrl.updateUser);
 router.post('/updateAvatarUser', userCtrl.updateAvatarUser);

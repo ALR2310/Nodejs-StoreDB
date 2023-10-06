@@ -137,5 +137,15 @@ module.exports = {
             console.error('Lỗi truy vấn:', error);
             next();
         }
-    }
+    },
+
+    // Một Middleware Kiểm tra xem có thông tin người dùng hiện tại không
+    async checkCurrentUser(req, res, next) {
+        var UserId = res.locals.currentUser;
+        if (UserId) {
+            next();
+        } else {
+            res.render('page404', { layout: '404layout' });
+        }
+    },
 }
