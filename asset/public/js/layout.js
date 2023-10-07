@@ -165,7 +165,7 @@ $('#btnLogin').click(function () {
                 $('#loginErr').css('display', 'none');
                 showSuccessToast('Đăng nhập thành công');
                 setTimeout(() => {
-                    window.location.href = '/';
+                    window.location.reload();
                 }, 1500);
 
             }

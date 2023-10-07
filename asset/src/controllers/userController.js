@@ -125,10 +125,10 @@ module.exports = {
         let sql, params;
 
         if (keysearch && keysearch !== '') {
-            sql = 'SELECT * FROM product WHERE UserId = ? AND (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?) and Status = ?';
+            sql = 'SELECT * FROM product WHERE UserId = ? AND (Productname LIKE ? OR Quantity LIKE ? OR Price LIKE ?) and Status = ? order by Id desc';
             params = [res.locals.currentUser.UserId, `%${keysearch}%`, `%${keysearch}%`, `%${keysearch}%`, 'Active'];
         } else {
-            sql = 'SELECT * FROM product WHERE UserId = ? and Status = ?';
+            sql = 'SELECT * FROM product WHERE UserId = ? and Status = ? order by Id desc';
             params = [res.locals.currentUser.UserId, 'Active'];
         }
 
