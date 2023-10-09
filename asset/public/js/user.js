@@ -312,7 +312,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }).text().trim(); // Lấy nội dung văn bản và loại bỏ khoảng trắng thừa
             tagsArray.push(tagText);
         });
-        console.log(tagsArray)
 
         const data = {
             Id: $('#modal-addProduct').attr('currentprd'),

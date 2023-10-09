@@ -112,7 +112,10 @@ window.addEventListener('DOMContentLoaded', () => {
             success: function (data) {
                 if (data.success) {
                     showSuccessToast('Gửi đánh giá sản phẩm thành công');
-                    $('#modal-rating').modal('hide');
+                    $('#modal-rating').modal('hide'); // ẩn modal
+                    $('#pdr-username').val('');
+                    $('#pdr-email').val('');
+                    $('#pdr-description').val('');
                 }
             },
             error: function (error) {
@@ -124,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 });
 
-let currentRating = 1; // biến rating mặt định
+let currentRating = 5; // biến rating mặt định
 
 
 // Function thống kê đánh giá
@@ -211,3 +214,86 @@ function showRatingForUser() {
         });
     });
 } showRatingForUser();
+
+
+
+// Đăng ký helper để chuyển đổi biến handlebars từ %variable% thành {{variable}}
+function convertPlaceHbs(template) {
+    // Thay thế biểu thức %variable%
+    template = template.replace(/%([a-zA-Z0-9.]+)%/g, "{{$1}}");
+    // Thay thế biểu thức %#each%
+    template = template.replace(/%#each ([a-zA-Z0-9.]+)%/g, "{{#each $1}}");
+    template = template.replace(/%\/each%/g, "{{/each}}");
+    // Thay thế biểu thức %if%
+    template = template.replace(/%#if ([a-zA-Z0-9.]+)%/g, "{{#if $1}}");
+    template = template.replace(/%#else%/g, "{{else}}");
+    template = template.replace(/%\/if%/g, "{{/if}}");
+    // Thay thế biểu thức %unless%
+    template = template.replace(/%#unless ([a-zA-Z0-9.]+)%/g, "{{#unless $1}}");
+    template = template.replace(/%\/unless%/g, "{{/unless}}");
+    // Thay thế biểu thức %#each-in%
+    template = template.replace(/%#each-in ([a-zA-Z0-9.]+)%/g, "{{#each-in $1}}");
+    template = template.replace(/%\/each-in%/g, "{{/each-in}}");
+    // Thay thế biểu thức %with%
+    template = template.replace(/%with ([a-zA-Z0-9.]+)%/g, "{{#with $1}}");
+    template = template.replace(/%\/with%/g, "{{/with}}");
+    // Thay thế biểu thức %lookup%
+    template = template.replace(/%lookup ([a-zA-Z0-9.]+) in ([a-zA-Z0-9.]+)%/g, "{{lookup $2 $1}}");
+    // Thay thế biểu thức %log%
+    template = template.replace(/%log ([a-zA-Z0-9.]+)%/g, "{{log $1}}");
+    return template;
+}
+
+
+var offsetPage = 0;
+var sizePage = 3;
+// nút xem tiếp các đánh giá
+function btnPdRevNext() {
+    var productId = $('.product-info').attr('prd');
+    offsetPage += sizePage;
+
+    $.ajax({
+        url: `loadMoreReviews?Id=${productId}&Offset=${offsetPage}`,
+        method: 'GET',
+        success: function (result) {
+            var source = $('#template-productReviews').html(); // Nguồn dữ liệu
+            var convertSource = convertPlaceHbs(source); // chuyển đổi sang biến handlebars
+            var template = Handlebars.compile(convertSource); // biên dịch handlebars
+            var data = template({ productReviews: result.data }); // Truyền biến
+            $('#templateReviewsContent').html(data); // Đưa nội dung mới ra views
+            showRatingForUser(); // gọi function để hiển thị số đánh giá của người dùng
+
+            if (result.data.length < 3) {
+                $('#btn-pdr_next').addClass('disabled')
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+}
+// nút xem lại các đánh giá
+function btnPdRevPrev() {
+    var productId = $('.product-info').attr('prd');
+    offsetPage -= sizePage;
+
+    $.ajax({
+        url: `loadMoreReviews?Id=${productId}&Offset=${offsetPage}`,
+        method: 'GET',
+        success: function (result) {
+            var source = $('#template-productReviews').html(); // Nguồn dữ liệu
+            var convertSource = convertPlaceHbs(source); // chuyển đổi sang biến handlebars
+            var template = Handlebars.compile(convertSource); // biên dịch handlebars
+            var data = template({ productReviews: result.data }); // Truyền biến
+            $('#templateReviewsContent').html(data); // Đưa nội dung mới ra views
+            showRatingForUser(); // gọi function để hiển thị số đánh giá của người dùng
+
+            if(offsetPage == 0){
+                $('#btn-pdr_prev').addClass('disabled')
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+}

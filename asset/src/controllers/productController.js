@@ -86,9 +86,10 @@ async function loadProduct(productId) {
 async function loadProductReviews(productId) {
     const connection = await db;
     try {
-        // Lấy danh sách đánh giá của sản phẩm
-        var sql = 'select * from productreviews where ProductId = ? and Status = "Active" order by Id desc';
+        // Sử dụng LIMIT và OFFSET để truy vấn danh sách đánh giá
+        var sql = 'SELECT * FROM productreviews WHERE ProductId = ? AND Status = "Active" ORDER BY Id DESC limit 3'
         var params = [productId];
+
         const [result] = await connection.execute(sql, params);
 
         if (result.length > 0) {
@@ -169,6 +170,39 @@ module.exports = {
             res.json({ success: true });
         } catch (err) {
             console.log('Lỗi truy vấn:', err);
+        }
+    },
+
+    // Lấy thêm dữ liệu từ bảng productreviews
+    async loadMoreReviews(req, res) {
+        const connection = await db;
+        // const { productId, offsetPage } = req.body;
+
+        // console.log(parseInt(productId), parseInt(offsetPage));
+
+        try {
+            const productId = parseInt(req.query.Id);
+            const offsetPage = parseInt(req.query.Offset);
+
+            var sql = `select * from productreviews where ProductId = ? and Status = ? order by Id desc limit 3 offset ${offsetPage}`;
+            var params = [productId, 'Active'];
+
+            const [result] = await connection.execute(sql, params);
+
+            if (result.length > 0) {
+                const resultFormat = result.map(review => {
+                    review.AtCreate = formatRelativeDate(review.AtCreate);
+                    return review;
+                });
+
+                return res.json({
+                    success: true,
+                    notice: 'Lấy dữ liệu thành công',
+                    data: resultFormat
+                });
+            }
+        } catch (err) {
+            console.log(err);
         }
     },
 }
