@@ -31,11 +31,13 @@ const homeRouter = require('./routers/homeRouter');
 const productRouter = require('./routers/productRouter');
 const userRouter = require('./routers/userRouter');
 const uploadRouter = require('./routers/uploadRouter');
+const apiRouter = require('./routers/apiRouter');
 
 app.use('/', homeRouter);
 app.use('/san-pham', productRouter);
 app.use('/nguoi-dung', userRouter);
 app.use('/upload', uploadRouter);
+app.use('/api', apiRouter);
 
 
 app.listen(port, () => console.log(`Ứng dụng chạy trên http://${host}:${port}`))
