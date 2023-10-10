@@ -63,8 +63,6 @@ module.exports = {
     async register(req, res) {
         const { email, username, password } = req.body; //Nhận dữ liệu từ client
 
-        console.log(email, username, password);
-
         // khai báo kết nối
         const connection = await db;
         try {

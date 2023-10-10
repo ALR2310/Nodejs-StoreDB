@@ -77,129 +77,156 @@ document.getElementById('btnLogout').addEventListener('click', () => {
     window.location.href = '/';
 });
 
-// Function kiểm tra mật khẩu
-function validateRegister() {
-    //check validateinputfield
-    if ($('#tblEmail').val() == '') {
-        $('#emailErr').css('display', 'block');
-        $('#emailErr').text('Email không được để trống');
+// function ẩn hiện cho input password
+function togglePasswordVisibility(button, inputId) {
+    const input = document.getElementById(inputId);
+    const iconShow = '<i class="fa-sharp fa-solid fa-eye"></i>'
+    const iconHide = '<i class="fa-sharp fa-solid fa-eye-slash"></i>'
+    if (input.type === 'password') {
+        input.type = 'text';
+        button.innerHTML = iconShow;
     } else {
-        $('#emailErr').css('display', 'none');
-    }
-    if ($('#tblUsername').val() == '') {
-        $('#usernameErr').css('display', 'block');
-        $('#usernameErr').text('Tên đăng nhập không được để trống');
-    } else {
-        $('#usernameErr').css('display', 'none');
-    }
-    if ($('#tblPassword').val() == '') {
-        $('#passwordErr').css('display', 'block');
-        $('#passwordErr').text('Mật khẩu không được để trống');
-    } else {
-        $('#passwordErr').css('display', 'none');
-    }
-    if ($('#tblConfirmPassword').val() == '') {
-        $('#confirmpasswordErr').css('display', 'block');
-        $('#confirmpasswordErr').text('Xác nhận mật khẩu không được để trống');
-    } else {
-        $('#confirmpasswordErr').css('display', 'none');
-    }
-    if ($('#tblPassword').val().length < 8) {
-        $('#passwordErr').text('Mật khẩu phải có ít nhất 8 ký tự');
-        $('#passwordErr').css('display', 'block');
-    } else {
-        $('#passwordErr').css('display', 'none');
-        if ($('#tblPassword').val() != $('#tblConfirmPassword').val()) {
-            $('#confirmpasswordErr').text('Mật khẩu xác nhận không trùng nhau');
-            $('#confirmpasswordErr').css('display', 'block');
-        } else {
-            $('#confirmpasswordErr').text('');
-            $('#confirmpasswordErr').css('display', 'none');
-        }
-    }
-
-    if ($('#tblEmail').val() != '' && $('#tblUsername').val() != '' &&
-        $('#tblPassword').val() != '' && $('#tblConfirmPassword').val() != '' &&
-        $('tblConfirmPassword').val() == $('tblPassword').val() && $('#tblPassword').val().length >= 8) {
-        return true;
-    } else {
-        return false;
+        input.type = 'password';
+        button.innerHTML = iconHide;
     }
 }
 
-// //Btn đăng nhập
-// $('#btnLogin').click(function () {
-//     var data = {
-//         email: $('#tblEmail1').val(),
-//         password: $('#tblPassword1').val(),
-//         remember: $('#remember').is(":checked"),
-//     }
+//function clearvailidate
+function clearRegisterValid() {
+    $('#registerEmail, #registerUserName, #registerPassword, #confirmPassword').on('change', function () {
+        $(this).removeClass('is-invalid');
+    });
+} clearRegisterValid();
+$('#registerPassword').on('blur', function () {
+    checkRegisterPassword();
+});
+$('#confirmPassword').on('blur', function () {
+    checkRegisterPassword();
+})
+//function checkpassword
+function checkRegisterPassword() {
+    var password = $('#registerPassword');
+    var confirmPassword = $('#confirmPassword');
+    if (password.val() == '') {
+        password.addClass('is-invalid');
+        $('#err-regPwd').text('Vui lòng nhập mật khẩu');
+    }
+    if (password.val().length < 8) {
+        password.addClass('is-invalid');
+        $('#err-regPwd').text('Mật khẩu chứa ít nhất 8 ký tự');
+    }
+    if (confirmPassword.val() == '' || confirmPassword.val() != password.val()) {
+        confirmPassword.addClass('is-invalid');
+    }
+}
+//function checkvalidate
+function checkRegisterVaild() {
+    var email = $('#registerEmail');
+    var userName = $('#registerUserName');
+    var password = $('#registerPassword');
+    var confirmPassword = $('#confirmPassword');
 
-//     $.ajax({
-//         url: '/dang-nhap',
-//         type: 'POST',
-//         data: JSON.stringify(data),
-//         contentType: 'application/json',
-//         success: function (result) {
-//             if (result.loginResult == false) {
-//                 $('#loginErr').text('Tên đăng nhập hoặc mật khẩu không chính xác');
-//                 $('#loginErr').css('display', 'block');
-//             } else {
-//                 $('#loginErr').css('display', 'none');
-//                 showSuccessToast('Đăng nhập thành công');
-//                 setTimeout(() => {
-//                     window.location.reload();
-//                 }, 1500);
-//             }
-//         },
-//         error: function (err) {
-//             console.log(err);
-//         }
-//     });
-// });
+    if (email.val() == '') {
+        email.addClass('is-invalid');
+        $('#err-regEmail').text('Vui lòng nhập địa chỉ Email');
+    }
+    if (userName.val() == '') {
+        userName.addClass('is-invalid');
+        $('#err-regUserName').text('Vui lòng nhập tên đăng nhập');
+    }
+    if (password.val() == '') {
+        password.addClass('is-invalid');
+        $('#err-regPwd').text('Vui lòng nhập mật khẩu');
+    }
+    if (password.val().length < 8) {
+        password.addClass('is-invalid');
+        $('#err-regPwd').text('Mật khẩu chứa ít nhất 8 ký tự');
+    }
+    if (confirmPassword.val() == '' || confirmPassword.val() != password.val()) {
+        confirmPassword.addClass('is-invalid');
+    }
+    // Trả về false nếu bất kỳ điều kiện nào không đúng, ngược lại trả về true
+    return !(email.val() == '' || userName.val() == '' || password.val() == '' || password.val().length < 8 || confirmPassword.val() == '' || confirmPassword.val() != password.val());
+}
 
-// // Btn đăng ký
-// $('#btnRegister').click(function () {
-//     var data = {
-//         email: $('#tblEmail').val(),
-//         username: $('#tblUsername').val(),
-//         password: $('#tblPassword').val(),
-//     }
-//     validateRegister();
-//     if (validateRegister() == true) {
-//         $.ajax({
-//             url: '/dang-ky',
-//             type: 'POST',
-//             data: JSON.stringify(data),
-//             contentType: 'application/json',
-//             success: function (result) {
-                // if (result.emailExist) {
-                //     $('#emailErr').css('display', 'block');
-                //     $('#emailErr').text('Email đã tồn tại');
-                // } else if (result.userNameExist) {
-                //     $('#usernameErr').css('display', 'block');
-                //     $('#usernameErr').text('Tên đăng nhập đã tồn tại');
-                // } else {
-                //     $('#emailErr').css('display', 'none');
-                //     $('#usernameErr').css('display', 'none');
-                // }
+// jquery gửi form đăng ký
+$('#btnRegister').click(function () {
+    if (checkRegisterVaild()) {
+        const data = {
+            email: $('#registerEmail').val(),
+            username: $('#registerUserName').val(),
+            password: $('#registerPassword').val(),
+        }
+        $.ajax({
+            url: '/dang-ky',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (result) {
+                if (result.userNameExist) {
+                    $('#registerUserName').addClass('is-invalid');
+                    $('#err-regUserName').text('Tên đăng nhập đã tồn tại');
+                } else {
+                    $('#registerUserName').removeClass('is-invalid');
+                }
 
-                // if (result.register) {
-                //     showSuccessToast('Đăng ký tài khoản thành công');
-                //     formContainer.classList.remove("active"); // Mở form đăng nhập
-                // } else {
-                //     showErrorToast('Đăng ký tài khoản thất bại');
-                // }
-//             },
-//             error: function (err) {
-//                 console.log(err);
-//             }
-//         });
-//     }
-// });
+                if (result.emailExist) {
+                    $('#registerEmail').addClass('is-invalid');
+                    $('#err-regEmail').text('Địa chỉ email đã tồn tại');
+                } else {
+                    $('#registerEmail').removeClass('is-invalid');
+                }
 
+                if (result.register) {
+                    showSuccessToast('Đăng ký tài khoản thành công');
+                    // Mở tab đăng nhập
+                    $("#login-tab").tab("show");
+                    // Điền sẵn thông tin đăng nhập
+                    $('#loginEmail').val(data.email);
+                    $('#loginPassword').val(data.password);
+                } else {
+                    showErrorToast('Đăng ký tài khoản thất bại');
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+});
 
+// jquery gửi form đăng nhập
+$('#btnLogin').click(function () {
+    const data = {
+        email: $('#loginEmail').val(),
+        password: $('#loginPassword').val(),
+        remember: $('#rememberMe').is(":checked"),
+    }
 
+    $.ajax({
+        url: '/dang-nhap',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (result) {
+            if (result.loginResult == false) {
+                $('#login-msg').removeClass('d-none');
+            } else {
+                $('#login-msg').addClass('d-none');
+                $('#loginRegisterModal').modal('hide');
+                showSuccessToast('Đăng nhập thành công');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+});
 
 
 

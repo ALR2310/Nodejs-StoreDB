@@ -6,7 +6,7 @@ const multer = require('multer');
 const app = express()
 const path = require('path')
 const host = 'localhost'
-const port = 3000
+const port = 2310
 
 //Middleware
 app.use(express.json())
