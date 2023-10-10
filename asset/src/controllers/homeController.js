@@ -28,11 +28,10 @@ module.exports = {
 
         // khai báo kết nối
         const connection = await db;
-
         try {
             // Kiểm tra thông tin đăng nhập của người dùng trong cơ sở dữ liệu
-            const sql = 'SELECT * FROM Users WHERE (UserName = ? OR Email = ?) AND Password = ?';
-            const [result, fields] = await connection.execute(sql, [email, email, password]);
+            var sql = 'SELECT * FROM Users WHERE (UserName = ? OR Email = ?) AND Password = ?';
+            const [result] = await connection.execute(sql, [email, email, password]);
 
             if (result.length === 0) {
                 return res.json({ loginResult: false });
@@ -42,8 +41,8 @@ module.exports = {
                 const userId = result[0].Id; // Lấy Id người dùng
 
                 // Lưu mã xác thực người dùng vào bảng authTokens
-                const insertTokenSql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
-                await connection.execute(insertTokenSql, [userId, token]);
+                sql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
+                await connection.execute(sql, [userId, token]);
 
                 if (remember) {
                     // Lưu mã xác thực vào cookie trong 1 tuần
@@ -52,7 +51,7 @@ module.exports = {
                     res.cookie('authToken', token); // Lưu mã xác thực vào cookie
                 }
 
-                return res.redirect('/');
+                return res.json({ loginResult: true });
             }
         } catch (error) {
             console.error('Lỗi truy vấn:', error);
@@ -64,10 +63,10 @@ module.exports = {
     async register(req, res) {
         const { email, username, password } = req.body; //Nhận dữ liệu từ client
 
+        console.log(email, username, password);
+
         // khai báo kết nối
         const connection = await db;
-
-
         try {
             //Kiểm tra tên đăng nhập
             var sql = 'SELECT * FROM users WHERE UserName = ?';

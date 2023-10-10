@@ -28,7 +28,7 @@ module.exports = {
     async getUser(req, res) {
         const connection = await db
         try {
-            var sql = 'select * from users as u inner join userinfo as ui on ui.userid = u.id where status = "active" order by u.id desc'
+            var sql = 'select * from users as u inner join usersinfor as ui on u.Id = ui.UserId where u.status = "active" order by u.Id desc'
             const [rows] = await connection.execute(sql)
             if (rows.length > 0) {
                 res.json(returnData(true, 'Lấy dữ liệu thành công', rows))

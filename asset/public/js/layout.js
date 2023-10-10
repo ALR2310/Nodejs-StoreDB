@@ -12,50 +12,33 @@ window.addEventListener('scroll', function () {
     }
 })
 
+// function mở các tab đăng ký/đăng nhập trên modal
+function openTabsLoginRegisterModal() {
+    var myTabs = new bootstrap.Tab(document.getElementById("login-tab"));
+    myTabs.show();
 
-// Mở form login/register
-const formLoginOpenBtn = document.querySelector("#form-open"),
-    modal_login = document.querySelector(".modal-login_form"),
-    formContainer = document.querySelector(".login-form_container"),
-    formLoginCloseBtn = document.querySelector(".form_close"),
-    signupBtn = document.querySelector("#signup"),
-    loginBtn = document.querySelector("#login"),
-    pwShowHide = document.querySelectorAll(".pw_hide");
+    document.querySelectorAll(".nav-link").forEach(function (tab) {
+        tab.addEventListener("click", function (event) {
+            event.preventDefault();
+            var tabId = this.getAttribute("href");
+            var tabContent = document.querySelector(tabId);
 
-formLoginOpenBtn.addEventListener("click", function () {
-    modal_login.classList.add("show");
-    modal_login.style.zIndex = "100";
-});
-formLoginCloseBtn.addEventListener("click", function () {
-    modal_login.classList.remove("show");
-    setTimeout(() => {
-        modal_login.style.zIndex = "-1";
-    }, 500);
+            // Ẩn/tab hiển thị các nội dung
+            document.querySelectorAll(".tab-pane").forEach(function (content) {
+                content.classList.remove("show", "active");
+            });
 
-});
+            // Hiển thị nội dung của tab được chọn
+            tabContent.classList.add("show", "active");
 
-pwShowHide.forEach((icon) => {
-    icon.addEventListener("click", () => {
-        let getPwInput = icon.parentElement.querySelector("input");
-        if (getPwInput.type === "password") {
-            getPwInput.type = "text";
-            icon.classList.replace("fa-eye-slash", "fa-eye");
-        } else {
-            getPwInput.type = "password";
-            icon.classList.replace("fa-eye", "fa-eye-slash");
-        }
+            // Nếu chuyển lại tab đăng nhập, hiển thị nội dung và tab đăng nhập
+            if (tabId === "#login") {
+                myTabs = new bootstrap.Tab(document.getElementById("login-tab"));
+                myTabs.show();
+            }
+        });
     });
-});
-
-signupBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    formContainer.classList.add("active");
-});
-loginBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    formContainer.classList.remove("active");
-});
-
+} openTabsLoginRegisterModal();
 
 // funcion xoá cookie
 function xoaCookie(cookieName) {
@@ -144,77 +127,79 @@ function validateRegister() {
     }
 }
 
-//Btn đăng nhập
-$('#btnLogin').click(function () {
-    var data = {
-        email: $('#tblEmail1').val(),
-        password: $('#tblPassword1').val(),
-        remember: $('#remember').is(":checked"),
-    }
+// //Btn đăng nhập
+// $('#btnLogin').click(function () {
+//     var data = {
+//         email: $('#tblEmail1').val(),
+//         password: $('#tblPassword1').val(),
+//         remember: $('#remember').is(":checked"),
+//     }
 
-    $.ajax({
-        url: '/dang-nhap',
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json',
-        success: function (result) {
-            if (result.loginResult == false) {
-                $('#loginErr').text('Tên đăng nhập hoặc mật khẩu không chính xác');
-                $('#loginErr').css('display', 'block');
-            } else {
-                $('#loginErr').css('display', 'none');
-                showSuccessToast('Đăng nhập thành công');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+//     $.ajax({
+//         url: '/dang-nhap',
+//         type: 'POST',
+//         data: JSON.stringify(data),
+//         contentType: 'application/json',
+//         success: function (result) {
+//             if (result.loginResult == false) {
+//                 $('#loginErr').text('Tên đăng nhập hoặc mật khẩu không chính xác');
+//                 $('#loginErr').css('display', 'block');
+//             } else {
+//                 $('#loginErr').css('display', 'none');
+//                 showSuccessToast('Đăng nhập thành công');
+//                 setTimeout(() => {
+//                     window.location.reload();
+//                 }, 1500);
+//             }
+//         },
+//         error: function (err) {
+//             console.log(err);
+//         }
+//     });
+// });
 
-            }
+// // Btn đăng ký
+// $('#btnRegister').click(function () {
+//     var data = {
+//         email: $('#tblEmail').val(),
+//         username: $('#tblUsername').val(),
+//         password: $('#tblPassword').val(),
+//     }
+//     validateRegister();
+//     if (validateRegister() == true) {
+//         $.ajax({
+//             url: '/dang-ky',
+//             type: 'POST',
+//             data: JSON.stringify(data),
+//             contentType: 'application/json',
+//             success: function (result) {
+                // if (result.emailExist) {
+                //     $('#emailErr').css('display', 'block');
+                //     $('#emailErr').text('Email đã tồn tại');
+                // } else if (result.userNameExist) {
+                //     $('#usernameErr').css('display', 'block');
+                //     $('#usernameErr').text('Tên đăng nhập đã tồn tại');
+                // } else {
+                //     $('#emailErr').css('display', 'none');
+                //     $('#usernameErr').css('display', 'none');
+                // }
 
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
-});
+                // if (result.register) {
+                //     showSuccessToast('Đăng ký tài khoản thành công');
+                //     formContainer.classList.remove("active"); // Mở form đăng nhập
+                // } else {
+                //     showErrorToast('Đăng ký tài khoản thất bại');
+                // }
+//             },
+//             error: function (err) {
+//                 console.log(err);
+//             }
+//         });
+//     }
+// });
 
-// Btn đăng ký
-$('#btnRegister').click(function () {
-    var data = {
-        email: $('#tblEmail').val(),
-        username: $('#tblUsername').val(),
-        password: $('#tblPassword').val(),
-    }
-    validateRegister();
-    if (validateRegister() == true) {
-        $.ajax({
-            url: '/dang-ky',
-            type: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            success: function (result) {
-                if (result.emailExist) {
-                    $('#emailErr').css('display', 'block');
-                    $('#emailErr').text('Email đã tồn tại');
-                } else if (result.userNameExist) {
-                    $('#usernameErr').css('display', 'block');
-                    $('#usernameErr').text('Tên đăng nhập đã tồn tại');
-                } else {
-                    $('#emailErr').css('display', 'none');
-                    $('#usernameErr').css('display', 'none');
-                }
 
-                if (result.register) {
-                    showSuccessToast('Đăng ký tài khoản thành công');
-                    formContainer.classList.remove("active"); // Mở form đăng nhập
-                } else {
-                    showErrorToast('Đăng ký tài khoản thất bại');
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        });
-    }
-});
+
+
 
 

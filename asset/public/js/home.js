@@ -54,7 +54,7 @@ status_bars.forEach((bar, index) => {
 });
 
 function startInterval() {
-    interval = setInterval(nextSliderImage, 3000); // 3000 milliseconds (3 giây)
+    interval = setInterval(nextSliderImage, 5000); // 5000 milliseconds
 }
 startInterval(); // Bắt đầu tự động chuyển đổi khi trang web được tải
 

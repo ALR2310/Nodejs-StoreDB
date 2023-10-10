@@ -100,8 +100,8 @@
                 </div>
             </div>
 
-            <a id="form-open" class="userLogin ms-4 link-item pointer">Đăng nhập/Đăng ký</a>
-
+            <a id="form-open" class="userLogin ms-4 link-item pointer" data-bs-toggle="modal"
+                data-bs-target="#loginRegisterModal">Đăng nhập/Đăng ký</a>
         </div>
 
     </div>
@@ -141,76 +141,293 @@
     </div>
 </nav>
 
-<section class="modal-login_form">
-    <div class="login-form_container">
-        <i class="fa-regular fa-xmark form_close"></i>
-        <!-- Login From -->
-        <div class="form login_form">
-            <div>
-                <h2>Đăng Nhập</h2>
-
-                <div class="input_box">
-                    <input type="text" id="tblEmail1" autocomplete="email" name="email"
-                        placeholder="Tên đăng nhập hoặc Email" required />
-                    <i class="fa-light fa-envelope email"></i>
-                </div>
-                <div class="input_box">
-                    <input type="password" id="tblPassword1" name="password" placeholder="Nhập Mật khẩu của bạn"
-                        required />
-                    <i class="fa-light fa-lock password"></i>
-                    <i class="fa-light fa-eye-slash pw_hide"></i>
-                </div>
-
-                <div class="option_field">
-                    <span class="checkbox">
-                        <input type="checkbox" id="remember" />
-                        <label for="remember">Ghi nhớ tài khoản</label>
-                    </span>
-                    <a href="#" class="forgot_pw">Quên mật khẩu?</a>
-                </div>
-
-                <span id="loginErr" class="msg-danger"></span>
-
-                <button id="btnLogin" type="submit" class="btn-form text-bg-primary">Đăng Nhập Ngay</button>
-
-                <div class="login_signup">Chưa có tài khoản? <a href="#" id="signup">đăng ký!</a></div>
+<!-- Modal -->
+<div class="modal fade" id="loginRegisterModal" tabindex="-1" aria-labelledby="loginRegisterModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 480px;">
+            <div class="modal-header">
+                <!-- Đặt tab đăng nhập và đăng ký ở giữa -->
+                <ul class="nav nav-tabs mx-auto" id="myTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active fs-5" id="login-tab" data-bs-toggle="tab" href="#login" role="tab"
+                            aria-controls="login" aria-selected="true">ĐĂNG NHẬP</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link fs-5" id="register-tab" data-bs-toggle="tab" href="#register" role="tab"
+                            aria-controls="register" aria-selected="false">ĐĂNG KÝ</a>
+                    </li>
+                </ul>
+                <!-- Kết thúc tab đăng nhập và đăng ký -->
             </div>
-        </div>
+            <div class="modal-body">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                        {{!-- Form đăng nhập --}}
+                        <div>
+                            <div class="mb-3">
+                                <label for="loginEmail" class="form-label">Tên tài khoản:</label>
+                                <input type="email" class="form-control" id="loginEmail"
+                                    placeholder="Nhập Tên đăng nhập hoặc Email" required>
+                                <div class="invalid-feedback">Vui lòng nhập tên đăng nhập</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Mật khẩu:</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="loginPassword"
+                                        placeholder="Nhập mật khẩu" required>
+                                    <button class="btnEyeSlash btn bg-secondary-subtle"
+                                        onclick="togglePasswordVisibility(this, 'loginPassword')">
+                                        <i class="fa-sharp fa-solid fa-eye-slash"></i>
+                                    </button>
+                                    <div class="invalid-feedback">Vui lòng nhập mật khẩu</div>
+                                </div>
 
-        <!-- Signup From -->
-        <div class="form signup_form">
-            <div>
-                <h2>Đăng Ký</h2>
+                            </div>
+                            <div class="mb-3 d-flex align-items-center justify-content-between">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Nhớ tài khoản</label>
+                                </div>
 
-                <div class="input_box">
-                    <input type="email" id="tblEmail" autocomplete="email" name="email" placeholder="Nhập Email của bạn"
-                        required />
-                    <i class="fa-light fa-envelope email"></i>
-                    <span id="emailErr" class="msg-danger">Lỗi đăng ký</span>
-                </div>
-                <div class="input_box">
-                    <input type="text" id="tblUsername" autocomplete="name" name="username"
-                        placeholder="Nhập tên đăng nhập" required />
-                    <i class="fa-light fa-user email"></i>
-                    <span id="usernameErr" class="msg-danger">Lỗi đăng ký</span>
-                </div>
-                <div class="input_box">
-                    <input type="password" id="tblPassword" name="password" placeholder="Nhập Mật khẩu" required />
-                    <i class="fa-light fa-lock password"></i>
-                    <i class="fa-light fa-eye-slash pw_hide"></i>
-                    <span id="passwordErr" class="msg-danger">Lỗi đăng ký</span>
-                </div>
-                <div class="input_box">
-                    <input type="password" id="tblConfirmPassword" placeholder="Xác nhận mật khẩu" required />
-                    <i class="fa-light fa-lock password"></i>
-                    <i class="fa-light fa-eye-slash pw_hide"></i>
-                    <span id="confirmpasswordErr" class="msg-danger">Lỗi đăng ký</span>
-                </div>
+                                <a href="#" class="forgot_pw">Quên mật khẩu?</a>
+                            </div>
 
-                <button id="btnRegister" class="btn-form text-bg-primary">Đăng Ký Ngay</button>
+                            <span id="login-msg" class="text-danger text-center w-100 d-block d-none mb-3">Tài khoản hoặc mật
+                                khẩu không chính xác</span>
 
-                <div class="login_signup">Bạn đã có tài khoản? <a href="#" id="login">đăng nhập!</a></div>
+                            <div class="d-flex justify-content-center">
+                                <button id="btnLogin" type="button" class="btn btn-primary w-50">Đăng nhập</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                        {{!-- Form đăng ký --}}
+                        <div>
+                            <div class="mb-3">
+                                <label for="registerEmail" class="form-label">Địa chỉ Email:</label>
+                                <input type="email" class="form-control" id="registerEmail"
+                                    placeholder="Nhập địa chỉ Email của bạn" required>
+                                <div id="err-regEmail" class="invalid-feedback">Vui lòng nhập địa chỉ email</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="registerEmail" class="form-label">Tên đăng nhập:</label>
+                                <input type="text" class="form-control" id="registerUserName"
+                                    placeholder="Nhập tên đăng nhập" required>
+                                <div id="err-regUserName" class="invalid-feedback">Vui lòng nhập tên đăng nhập</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="registerPassword" class="form-label">Mật khẩu:</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="registerPassword"
+                                        placeholder="Nhập mật khẩu của bạn" required>
+                                    <button class="btnEyeSlash btn bg-secondary-subtle"
+                                        onclick="togglePasswordVisibility(this, 'registerPassword')">
+                                        <i class="fa-sharp fa-solid fa-eye-slash"></i>
+                                    </button>
+                                    <div id="err-regPwd" class="invalid-feedback">Vui lòng nhập mật khẩu</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Nhập lại mật khẩu:</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="confirmPassword"
+                                        placeholder="Nhập lại mật khẩu của bạn" required>
+                                    <button class="btnEyeSlash btn bg-secondary-subtle"
+                                        onclick="togglePasswordVisibility(this, 'confirmPassword')">
+                                        <i class="fa-sharp fa-solid fa-eye-slash"></i>
+                                    </button>
+                                    <div id="err-regCfpwd" class="invalid-feedback">Mật khẩu xác nhận không chính xác
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <button id="btnRegister" class="btn btn-primary w-50">Đăng ký</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 0 16px 16px 16px">
+                <div class="text-center mb-3">
+                    <div class="d-inline-block px-2 border-top border-secondary" style="width: 100px;">
+                    </div>
+                    <span class="mx-2">Hoặc</span>
+                    <div class="d-inline-block px-2 border-top border-secondary" style="width: 100px;">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <!-- Nút đăng nhập bằng Google -->
+                    <button type="button" class="btn btn-outline-danger mb-3">
+                        <img src="/images/icons/google-logo.png" alt="" class="btnLogo">
+                        Đăng nhập với Google
+                    </button>
+
+                    <!-- Nút đăng nhập bằng Facebook -->
+                    <button type="button" class="btn btn-outline-primary mb-3">
+                        <img src="/images/icons/facebook-logo.png" alt="" class="btnLogo">
+                        Đăng nhập với Facebook
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+
+<script>
+    // function ẩn hiện cho input password
+    function togglePasswordVisibility(button, inputId) {
+        const input = document.getElementById(inputId);
+        const iconShow = '<i class="fa-sharp fa-solid fa-eye"></i>'
+        const iconHide = '<i class="fa-sharp fa-solid fa-eye-slash"></i>'
+        if (input.type === 'password') {
+            input.type = 'text';
+            button.innerHTML = iconShow;
+        } else {
+            input.type = 'password';
+            button.innerHTML = iconHide;
+        }
+    }
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        //function clearvailidate
+        function clearRegisterValid() {
+            $('#registerEmail, #registerUserName, #registerPassword, #confirmPassword').on('change', function () {
+                $(this).removeClass('is-invalid');
+            });
+        } clearRegisterValid();
+        $('#registerPassword').on('blur', function () {
+            checkRegisterPassword();
+        });
+        $('#confirmPassword').on('blur', function () {
+            checkRegisterPassword();
+        })
+        //function checkpassword
+        function checkRegisterPassword() {
+            var password = $('#registerPassword');
+            var confirmPassword = $('#confirmPassword');
+            if (password.val() == '') {
+                password.addClass('is-invalid');
+                $('#err-regPwd').text('Vui lòng nhập mật khẩu');
+            }
+            if (password.val().length < 8) {
+                password.addClass('is-invalid');
+                $('#err-regPwd').text('Mật khẩu chứa ít nhất 8 ký tự');
+            }
+            if (confirmPassword.val() == '' || confirmPassword.val() != password.val()) {
+                confirmPassword.addClass('is-invalid');
+            }
+        }
+        //function checkvalidate
+        function checkRegisterVaild() {
+            var email = $('#registerEmail');
+            var userName = $('#registerUserName');
+            var password = $('#registerPassword');
+            var confirmPassword = $('#confirmPassword');
+
+            if (email.val() == '') {
+                email.addClass('is-invalid');
+                $('#err-regEmail').text('Vui lòng nhập địa chỉ Email');
+            }
+            if (userName.val() == '') {
+                userName.addClass('is-invalid');
+                $('#err-regUserName').text('Vui lòng nhập tên đăng nhập');
+            }
+            if (password.val() == '') {
+                password.addClass('is-invalid');
+                $('#err-regPwd').text('Vui lòng nhập mật khẩu');
+            }
+            if (password.val().length < 8) {
+                password.addClass('is-invalid');
+                $('#err-regPwd').text('Mật khẩu chứa ít nhất 8 ký tự');
+            }
+            if (confirmPassword.val() == '' || confirmPassword.val() != password.val()) {
+                confirmPassword.addClass('is-invalid');
+            }
+            // Trả về false nếu bất kỳ điều kiện nào không đúng, ngược lại trả về true
+            return !(email.val() == '' || userName.val() == '' || password.val() == '' || password.val().length < 8 || confirmPassword.val() == '' || confirmPassword.val() != password.val());
+        }
+
+        // jquery gửi form đăng ký
+        $('#btnRegister').click(function () {
+            if (checkRegisterVaild()) {
+                const data = {
+                    email: $('#registerEmail').val(),
+                    username: $('#registerUserName').val(),
+                    password: $('#registerPassword').val(),
+                }
+                $.ajax({
+                    url: '/dang-ky',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.userNameExist) {
+                            $('#registerUserName').addClass('is-invalid');
+                            $('#err-regUserName').text('Tên đăng nhập đã tồn tại');
+                        } else {
+                            $('#registerUserName').removeClass('is-invalid');
+                        }
+
+                        if (result.emailExist) {
+                            $('#registerEmail').addClass('is-invalid');
+                            $('#err-regEmail').text('Địa chỉ email đã tồn tại');
+                        } else {
+                            $('#registerEmail').removeClass('is-invalid');
+                        }
+
+                        if (result.register) {
+                            showSuccessToast('Đăng ký tài khoản thành công, hãy đăng nhập ngay');
+                        } else {
+                            showErrorToast('Đăng ký tài khoản thất bại');
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            }
+        });
+
+        // jquery gửi form đăng nhập
+        $('#btnLogin').click(function () {
+            const data = {
+                email: $('#loginEmail').val(),
+                password: $('#loginPassword').val(),
+                remember: $('#rememberMe').is(":checked"),
+            }
+
+            $.ajax({
+                url: '/dang-nhap',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (result) {
+                    if (result.loginResult == false) {
+                        $('#login-msg').removeClass('d-none');
+                    } else {
+                        $('#login-msg').addClass('d-none');
+                        $('#loginRegisterModal').modal('hide');
+                        showSuccessToast('Đăng nhập thành công');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+    });
+</script>
