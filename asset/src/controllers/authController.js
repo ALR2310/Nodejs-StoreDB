@@ -80,13 +80,22 @@ module.exports = {
             if (result.length === 0) {
                 return res.json({ loginResult: false });
             } else {
-                // Tạo mã xác thực người dùng (token)
-                const token = crypto.createHash('sha256').update(uuidv4()).digest('hex');
+                var token;
                 const userId = result[0].Id; // Lấy Id người dùng
 
-                // Lưu mã xác thực người dùng vào bảng authTokens
-                sql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
-                await connection.execute(sql, [userId, token]);
+                // Kiểm tra mã xác thực của người dùng (token)
+                sql = 'select tokens from authtokens where userid = ?';
+                const [rowsTokens] = await connection.execute(sql, [userId]);
+
+                if (rowsTokens.length > 0) {
+                    // nếu có mã xác thực
+                    token = rowsTokens[0].tokens;
+                } else {
+                    // nếu không có mã xác thực, tạo mã xác thực mới
+                    token = crypto.createHash('sha256').update(uuidv4()).digest('hex');
+                    sql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
+                    await connection.execute(sql, [userId, token]);
+                }
 
                 if (remember) {
                     // Lưu mã xác thực vào cookie trong 1 tuần
