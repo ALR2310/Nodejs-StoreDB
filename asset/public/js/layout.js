@@ -228,5 +228,23 @@ $('#btnLogin').click(function () {
     });
 });
 
+// Btn đăng nhập bằng google
+$('#loginGoogle').click(function () {
+    const width = 530;
+    const height = 600;
+    const left = window.innerWidth / 2 - width / 2;
+    const top = window.innerHeight / 2 - height / 2;
 
+    const popup = window.open(
+        '/dang-nhap/google',  // Đường dẫn đến trang đăng nhập bằng Google
+        'google-login-popup',
+        `width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    if (window.focus) {
+        popup.focus();
+    }
+
+    return false;
+});
 

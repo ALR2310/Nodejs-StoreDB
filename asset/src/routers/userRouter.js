@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userCtrl = require('../controllers/userController');
-const homeCtrl = require('../controllers/homeController');
+const authCtrl = require('../controllers/authController');
 
-router.use(homeCtrl.checkCurrentUser);
+router.use(authCtrl.checkCurrentUser);
 
 router.get('/quan-ly-san-pham', userCtrl.productManager);
 router.post('/quan-ly-san-pham/createProduct', userCtrl.create);
@@ -14,6 +14,7 @@ router.post('/quan-ly-san-pham/deleteProduct', userCtrl.delete);
 router.post('/updateUser', userCtrl.updateUser);
 router.post('/updateAvatarUser', userCtrl.updateAvatarUser);
 router.post('/updaePasswordUser', userCtrl.updaePasswordUser);
+
 router.get('/:Id', userCtrl.index);
 
 module.exports = router;
