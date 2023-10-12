@@ -1,6 +1,34 @@
 const db = require('../configs/dbconnect')
 const crypto = require('crypto'); // Sử dụng để tạo mã xác thực người dùng
 const { v4: uuidv4 } = require('uuid'); // Sử dụng để tạo token
+const transporter = require('../configs/emailConfigs');
+
+
+// function tạo 6 số ngẫu nhiên
+function generateVerificationCode() {
+    // Tạo một mảng gồm 6 số ngẫu nhiên từ 0 đến 9
+    const numbers = Array.from({ length: 6 }, (_, i) => Math.floor(Math.random() * 10));
+    // Trả về mảng số ngẫu nhiên
+    return numbers.join("");
+}
+
+// Gửi mã xác thực
+function sendVerificationEmail(email, verifyCode) {
+    var mailOptions = {
+        from: "ansaka147@gmail.com",
+        to: email,
+        subject: "Verification Code",
+        text: `Mã xác thực ứng dụng của bạn là: ${verifyCode}`,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Email sent: " + info.response);
+        }
+    });
+};
 
 module.exports = {
     // xử lý chức năng đăng nhập bằng google
@@ -40,8 +68,8 @@ module.exports = {
                 res.cookie('authToken', token); // Luu mã xác thực vào cookie
             } else {
                 // Tài khoản không tồn tại, tiến hành dang ký
-                sql = 'INSERT INTO Users (GoogleId, UserName, Email, Avatar) VALUES (?, ?, ?, ?)';
-                var params = [googleId, displayName, email, avatar];
+                sql = 'INSERT INTO Users (GoogleId, UserName, Email, Avatar, Status) VALUES (?, ?, ?, ?, ?)';
+                var params = [googleId, displayName, email, avatar, 'Active'];
                 const [users] = await connection.execute(sql, params);
 
                 // Lấy id người dùng
@@ -143,6 +171,14 @@ module.exports = {
             sql = 'insert usersinfor(userid, displayname, gender) value (?, ?, ?)'
             await connection.execute(sql, [userId, username, 'Nam']);
 
+            const verifyCode = generateVerificationCode();
+
+            // Gửi mã xác nhận đến Email
+            sendVerificationEmail(email, verifyCode);
+
+            req.session.verifyCode = verifyCode;
+            req.session.UserId = userId;
+
             res.json({ register: true });
         } catch (error) {
             console.error('Lỗi truy vấn:', error);
@@ -150,21 +186,77 @@ module.exports = {
         }
     },
 
+    // gửi lại mã xác thực
+    async sendVerifyCode(req, res) {
+        const { email } = req.body;
+
+        var verifyCode = generateVerificationCode();
+        sendVerificationEmail(email, verifyCode);
+        req.session.verifyCode = verifyCode;
+        res.json({ sendVerifyCode: true });
+    },
+
+    // Xác thực email
+    async verifyEmail(req, res) {
+        const { verifyCode } = req.body;
+        const verifyCodeSession = req.session.verifyCode;
+        const UserIdSession = req.session.UserId;
+
+        if (verifyCode == verifyCodeSession) {
+            var sql = 'update users set Status = "Active" where Id = ?';
+
+            const connection = await db;
+            try {
+                await connection.execute(sql, [UserIdSession]);
+            } catch (err) {
+                console.log('Lỗi truy vấn:', err);
+            }
+
+            res.json({ verifyEmail: true });
+        } else {
+            res.json({ verifyEmail: false });
+        }
+    },
+
+    // Kiểm tra trạng thái tài khoản của người dùng
+    async checkUserStatus(req, res) {
+
+        if (res.locals.currentUser) {
+
+            const CurrentUserId = res.locals.currentUser.Id;
+            const connection = await db;
+            try {
+                var sql = 'SELECT * FROM users WHERE Id = ?';
+                const [result] = await connection.execute(sql, [CurrentUserId]);
+
+                if (result[0].Status == 'Active') {
+                    res.json({ status: true });
+                } else {
+                    res.json({ status: false, email: result[0].Email });
+                }
+
+            } catch (err) {
+                console.log('Lỗi truy vấn:', err);
+            }
+        } else {
+            res.json({ message: 'Người dùng chưa đăng nhập' });
+        }
+    },
+
     // Một hàm middleware để xác thực người dùng trong mọi yêu cầu
     async authenticateUser(req, res, next) {
         const authToken = req.cookies.authToken; // Lấy mã xác thực từ cookie
-        // khai báo kết nối
-        const connection = await db;
+        const connection = await db; // khai báo kết nối sql
 
         if (!authToken) {
-            // Nếu auth token không được định nghĩa, hãy bỏ qua truy vấn
+            // Nếu auth token không được định nghĩa, bỏ qua truy vấn
             return next();
         }
 
         try {
             // Kiểm tra mã xác thực với cơ sở dữ liệu hoặc nơi bạn lưu nó
-            const sql = 'SELECT * FROM authTokens WHERE tokens = ?';
-            const [result, fields] = await connection.execute(sql, [authToken]);
+            var sql = 'SELECT * FROM authTokens WHERE tokens = ?';
+            const [result] = await connection.execute(sql, [authToken]);
 
             if (result.length === 0) {
                 console.log('NotAuthToken');
@@ -172,11 +264,12 @@ module.exports = {
             } else {
                 // Lấy thông tin người dùng từ cơ sở dữ liệu bằng userId
                 const userId = result[0].UserId;
-                const userQuery = 'select * from users as u inner join usersinfor as ui on ui.UserId = u.Id where ui.userid = ?';
-                const [userResult, userFields] = await connection.execute(userQuery, [userId]);
+                sql = 'select * from users as u inner join usersinfor as ui on ui.UserId = u.Id where ui.userid = ?';
+                const [userResult] = await connection.execute(sql, [userId]);
 
                 if (userResult.length === 0) {
-                    return res.status(401).send('NotUser');
+                    console.log('NotUser');
+                    next(); // Chuyển tiếp yêu cầu
                 } else {
                     res.locals.currentUser = userResult[0];
                     next(); // Chuyển tiếp yêu cầu
@@ -190,7 +283,8 @@ module.exports = {
 
     // Một Middleware Kiểm tra xem có thông tin người dùng hiện tại không
     async checkCurrentUser(req, res, next) {
-        var UserId = res.locals.currentUser;
+        const UserId = res.locals.currentUser;
+
         if (UserId) {
             next();
         } else {

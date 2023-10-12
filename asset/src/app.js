@@ -9,6 +9,7 @@ const path = require('path')
 const host = 'localhost'
 const port = 2310
 
+
 // Sử dụng express-session
 app.use(session({
   secret: 'mysecret',

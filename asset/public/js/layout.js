@@ -180,11 +180,12 @@ $('#btnRegister').click(function () {
 
                 if (result.register) {
                     showSuccessToast('Đăng ký tài khoản thành công');
-                    // Mở tab đăng nhập
-                    $("#login-tab").tab("show");
-                    // Điền sẵn thông tin đăng nhập
-                    $('#loginEmail').val(data.email);
-                    $('#loginPassword').val(data.password);
+                    //Đóng modal đăng nhập/đăng ký
+                    $('#loginRegisterModal').modal('hide');
+                    // Mở modal xác nhận email
+                    $('#verifyEmailModal').modal('show');
+                    // đặt địa chỉ Email
+                    $('#emailVerify').val(data.email);
                 } else {
                     showErrorToast('Đăng ký tài khoản thất bại');
                 }
@@ -195,6 +196,38 @@ $('#btnRegister').click(function () {
         });
     }
 });
+
+// btn xác thực email
+$('#btnVerify').click(function () {
+    const data = {
+        verifyCode: $('#verifyCode').val(),
+    }
+
+    $.ajax({
+        url: '/dang-ky/verifyEmail',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (result) {
+            if (result.verifyEmail) {
+                $('#verifyEmailModal').modal('hide'); // Đóng modal xác thực
+                showSuccessToast('Xác thực email thành công'); // hiển thị thông báo
+                $('#loginRegisterModal').modal('show'); // Mở modal đăng nhập
+                // Mở tab đăng nhập
+                $("#login-tab").tab("show");
+                // Điền sẵn thông tin đăng nhập
+                $('#loginEmail').val($('#registerUserName').val());
+                $('#loginPassword').val($('#registerPassword').val());
+            } else {
+                showErrorToast('Xac thực email thất bại');
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+})
 
 // jquery gửi form đăng nhập
 $('#btnLogin').click(function () {
@@ -248,3 +281,66 @@ $('#loginGoogle').click(function () {
     return false;
 });
 
+// Kiểm tra trạng thái tài khoản
+function checkUserStatus() {
+    $.ajax({
+        url: '/checkuserstatus',
+        type: 'GET',
+        success: function (result) {
+            if (result.status == false) {
+                $('#verifyEmailModal').modal('show'); // hiển thị modal xác nhận đăng ký
+                $('#err-verifyCode').html(`Vui lòng xác thực Email của bạn để tiếp tục sử dụng, 
+                Email đã được gửi đến <span id="emailVerify"class="text-danger">${result.email}
+                </span>. Vui lòng kiểm tra hộp thư Email của bạn.`);
+                $('#link-resend').click();
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    })
+}; checkUserStatus();
+
+// btn gửi lại mã xác thực
+$('#link-resend').click(function (event) {
+    event.preventDefault();
+
+    $('#link-resend').addClass('d-none');
+    $('#resendCountdown').removeClass('d-none');
+
+    var seconds = 60;
+    $('#countdown').text(seconds);
+
+    var countdownInterval = setInterval(function () {
+        seconds--;
+        $('#countdown').text(seconds);
+
+        if (seconds <= 0) {
+            clearInterval(countdownInterval);
+            $('#link-resend').removeClass('d-none');
+            $('#resendCountdown').addClass('d-none');
+        }
+    }, 1000);
+
+    const data = {
+        email: $('#emailVerify').text()
+    }
+
+    $.ajax({
+        url: 'dang-ky/sendVerifyCode',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (result) {
+            if (result.sendVerifyCode) {
+                showSuccessToast('Gửi lại mã xác thực thành công')
+            } else {
+                showErrorToast('Gửi lại mã xác thực thất bại')
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});

@@ -63,4 +63,12 @@ function stopInterval() {
     clearInterval(interval);
 }
 
+window.addEventListener('DOMContentLoaded', () => {
+    $('.prev-btn').on('mouseenter', stopInterval());
+    $('.next-btn').on('mouseenter', stopInterval());
+    $('.prev-btn').on('mouseleave', startInterval());
+    $('.next-btn').on('mouseleave', startInterval());
+})
+
+
 

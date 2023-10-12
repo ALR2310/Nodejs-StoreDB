@@ -167,7 +167,7 @@
                         <div>
                             <div class="mb-3">
                                 <label for="loginEmail" class="form-label">Tên tài khoản:</label>
-                                <input type="email" class="form-control" id="loginEmail"
+                                <input type="text" class="form-control" id="loginEmail"
                                     placeholder="Nhập Tên đăng nhập hoặc Email" required>
                                 <div class="invalid-feedback">Vui lòng nhập tên đăng nhập</div>
                             </div>
@@ -274,6 +274,34 @@
                         <img src="/images/icons/facebook-logo.png" alt="" class="btnLogo">
                         Đăng nhập với Facebook
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Modal xác thực email --}}
+<div class="modal fade" id="verifyEmailModal" tabindex="-1" aria-labelledby="verifyEmailModalLabel" aria-hidden="true"
+    data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center d-block w-100" id="verifyEmailModalLabel">Xác thực email</h5>
+            </div>
+            <div class="modal-body">
+                <p id="err-verifyCode" class="d-block text-center">Một mã xác thực đã được gửi đến Email <span
+                        id="emailVerify" class="text-danger">LeThanhAn342004@gmail.com</span>. Vui
+                    lòng kiểm tra hộp thư Email của bạn</p>
+                <input type="text" class=" form-control" id="verifyCode" placeholder="Nhập mã xác thực">
+                <div id="msg-verify" class="invalid-feedback">Vui lòng nhập mã xác thực</div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <a href="" id="link-resend">Gửi lại mã xác thực</a>
+                        <p id="resendCountdown" class="mb-0 d-none">Gửi lại mã sau: <span id="countdown">60</span>s</p>
+                    </div>
+                    <div class="col">
+                        <button id="btnVerify" type="button" class="btn btn-primary w-100">Xác thực</button>
+                    </div>
                 </div>
             </div>
         </div>
