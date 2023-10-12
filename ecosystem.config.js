@@ -11,7 +11,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'https://github.com/AnLeRIP2310/Nodejs-StoreDB.git',
       path : 'D:/LeThanhAn/Nodejs/Nodejs-StoreDB/',
-      'post-deploy' : 'npm install',
+      'post-deploy' : 'npm install', 
       env: {
         NODE_ENV: 'production',
       }
