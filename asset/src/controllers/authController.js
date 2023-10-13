@@ -30,6 +30,28 @@ function sendVerificationEmail(email, verifyCode) {
     });
 };
 
+async function generateAuthToken(userId, res) {
+    const connection = await db;
+    var token;
+    var sql = 'select tokens from authtokens where userid = ?'
+    try {
+        const [checkTokens] = await connection.execute(sql, [userId]);
+
+        if (checkTokens.length > 0) {
+            // nếu có mã xác thực
+            token = checkTokens[0].tokens; //gán mã xác thực vào biến
+        } else {
+            // nếu không có mã xác thực, tạo mới và thêm vào database
+            token = crypto.createHash('sha256').update(uuidv4()).digest('hex');
+            sql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
+            await connection.execute(sql, [userId, token]);
+        }
+        res.cookie('authToken', token); // Luu mã xác thực vào cookie
+    } catch (err) {
+        console.log('Lỗi truy vấn:', err);
+    }
+}
+
 module.exports = {
     // xử lý chức năng đăng nhập bằng google
     async loginGoogle(req, res) {
@@ -42,56 +64,56 @@ module.exports = {
 
         const connection = await db;
         try {
-            var sql = 'select * from users where GoogleId = ?';
-            const [rows] = await connection.execute(sql, [googleId]);
+            // Kiểm tra email
+            var sql = 'select * from users where Email = ?';
+            const [checkEmail] = await connection.execute(sql, [email]);
 
-            // Tài khoản tồn tại
-            if (rows.length > 0) {
-                var token;
-                const userId = rows[0].Id; // Lấy id người dùng
-                // Lấy mã xác thực của người dùng (token)
-                sql = 'select tokens from authtokens where userid = ?';
-                const [rowsTokens] = await connection.execute(sql, [userId]);
+            if (checkEmail.length > 0) {
+                // email có tồn tại, kiểm tra GoogleId
+                sql = 'select * from users where GoogleId = ? and Email = ?';
+                const [checkGoogleId] = await connection.execute(sql, [googleId, email]);
 
-                // Kiểm tra mã xác thực (token)
-                if (rowsTokens.length > 0) {
-                    // nếu có mã xác thực
-                    token = rowsTokens[0].tokens;
+                if (checkGoogleId.length > 0) {
+                    // nếu có googleId, tiến hành đăng nhập
+                    const userId = checkEmail[0].Id; // Lấy id người dùng
+
+                    //Kiểm tra xem đã có mã xác thực chưa(authToken)
+                    await generateAuthToken(userId, res);
                 } else {
-                    // nếu không có mã xác thực
-                    // Luu mã xác thực người dùng vào bảng authTokens
-                    token = crypto.createHash('sha256').update(uuidv4()).digest('hex');
-                    sql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
-                    await connection.execute(sql, [userId, token]);
-                };
+                    // nếu không có googleId, thêm googleId vào tài khoản
+                    const userId = checkEmail[0].Id; // Lấy id người dùng
+                    sql = 'update users set GoogleId = ? where Id = ?';
+                    await connection.execute(sql, [googleId, userId]);
 
-                res.cookie('authToken', token); // Luu mã xác thực vào cookie
+                    // kiểm tra xem đã có mã xác thực chưa(authToken)
+                    await generateAuthToken(userId, res);
+                }
             } else {
-                // Tài khoản không tồn tại, tiến hành dang ký
+                // email không tồn tại, tiến hành đăng ký tài khoản mới
                 sql = 'INSERT INTO Users (GoogleId, UserName, Email, Avatar, Status) VALUES (?, ?, ?, ?, ?)';
                 var params = [googleId, displayName, email, avatar, 'Active'];
-                const [users] = await connection.execute(sql, params);
+                const [insertUserResult] = await connection.execute(sql, params);
 
-                // Lấy id người dùng
-                const userId = users.insertId;
+                const userId = insertUserResult.insertId; // lấy Id người dùng
 
                 // Thêm vào userinfor
                 sql = 'insert usersinfor(userid, displayname) value (?, ?)'
                 params = [userId, displayName];
                 await connection.execute(sql, params);
 
-                // Tạo mã xác thực người dùng (token)
-                const token = crypto.createHash('sha256').update(uuidv4()).digest('hex');
-                sql = 'INSERT INTO authTokens (UserId, tokens) VALUES (?, ?)';
-                await connection.execute(sql, [userId, token]);
-
-                res.cookie('authToken', token); // Luu mã xác thực vào cookie
+                // kiểm tra xem đã có mã xác thực chưa(authToken)
+                await generateAuthToken(userId, res);
             }
             // đóng cửa sổ đăng nhập, reload lại trang web chính
             res.send('<script>window.opener.location.reload(); window.close();</script>');
         } catch (err) {
             console.log('Lỗi truy vấn:', err);
         }
+    },
+
+    // xử lý đăng nhập bằng facebook
+    async loginFacebook(req, res) {
+        console.log(req.user);
     },
 
     // Hàm xử lý chức năng đăng nhập

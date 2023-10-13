@@ -249,6 +249,11 @@ $('#loginGoogle').click(function () {
     return false;
 });
 
+// Btn đăng nhập bằng facebook
+$('#loginFacebook').click(function() {
+    window.location.href = '/dang-nhap/facebook';
+});
+
 // btn xác thực email
 $('#btnVerify').click(function () {
     const data = {

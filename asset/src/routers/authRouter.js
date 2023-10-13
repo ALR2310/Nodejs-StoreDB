@@ -11,8 +11,14 @@ router.post('/dang-ky/verifyEmail', authCtrl.verifyEmail); // Xác thực email
 
 // Đăng nhập bằng Google
 router.get('/dang-nhap/google', passport.authenticate('google'));
-router.get('/dang-nhap/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), authCtrl.loginGoogle);
+router.get('/dang-nhap/google/callback', passport.authenticate('google', { failureRedirect: '/' }), authCtrl.loginGoogle);
+
+// Đăng nhập bằng Facebook
+router.get('/dang-nhap/facebook', passport.authenticate('facebook'));
+router.get('/dang-nhap/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/' }), authCtrl.loginFacebook);
 
 router.get('/checkuserstatus', authCtrl.checkUserStatus);
+
+
 
 module.exports = router;

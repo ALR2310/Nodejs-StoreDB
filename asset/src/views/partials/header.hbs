@@ -141,7 +141,7 @@
     </div>
 </nav>
 
-<!-- Modal -->
+<!-- Modal Login & Register -->
 <div class="modal fade" id="loginRegisterModal" tabindex="-1" aria-labelledby="loginRegisterModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
@@ -253,7 +253,7 @@
                     </div>
                 </div>
             </div>
-            {{!-- Đăng nhập bằng Google hoặc Facebook --}}
+            {{!-- Login With Google & Facebook --}}
             <div style="padding: 0 16px 16px 16px">
                 <div class="text-center mb-3">
                     <div class="d-inline-block px-2 border-top border-secondary" style="width: 100px;">
@@ -270,7 +270,7 @@
                     </button>
 
                     <!-- Nút đăng nhập bằng Facebook -->
-                    <button type="button" class="btn btn-outline-primary mb-3">
+                    <button id="loginFacebook" type="button" class="btn btn-outline-primary mb-3">
                         <img src="/images/icons/facebook-logo.png" alt="" class="btnLogo">
                         Đăng nhập với Facebook
                     </button>
@@ -280,7 +280,7 @@
     </div>
 </div>
 
-{{!-- Modal xác thực email --}}
+{{!-- Modal verify Email --}}
 <div class="modal fade" id="verifyEmailModal" tabindex="-1" aria-labelledby="verifyEmailModalLabel" aria-hidden="true"
     data-bs-backdrop="static">
     <div class="modal-dialog">
