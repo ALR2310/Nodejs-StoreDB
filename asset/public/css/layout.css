@@ -390,3 +390,9 @@
     border-top-right-radius: 6px !important;
     border-bottom-right-radius: 6px !important;
 }
+
+/* /////////////////////////// */
+
+#err-verifyCode {
+    margin-bottom: 1rem;
+}

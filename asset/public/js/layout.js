@@ -197,38 +197,6 @@ $('#btnRegister').click(function () {
     }
 });
 
-// btn xác thực email
-$('#btnVerify').click(function () {
-    const data = {
-        verifyCode: $('#verifyCode').val(),
-    }
-
-    $.ajax({
-        url: '/dang-ky/verifyEmail',
-        type: 'POST',
-        data: JSON.stringify(data),
-        contentType: 'application/json',
-        dataType: 'json',
-        success: function (result) {
-            if (result.verifyEmail) {
-                $('#verifyEmailModal').modal('hide'); // Đóng modal xác thực
-                showSuccessToast('Xác thực email thành công'); // hiển thị thông báo
-                $('#loginRegisterModal').modal('show'); // Mở modal đăng nhập
-                // Mở tab đăng nhập
-                $("#login-tab").tab("show");
-                // Điền sẵn thông tin đăng nhập
-                $('#loginEmail').val($('#registerUserName').val());
-                $('#loginPassword').val($('#registerPassword').val());
-            } else {
-                showErrorToast('Xac thực email thất bại');
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
-})
-
 // jquery gửi form đăng nhập
 $('#btnLogin').click(function () {
     const data = {
@@ -281,6 +249,64 @@ $('#loginGoogle').click(function () {
     return false;
 });
 
+// btn xác thực email
+$('#btnVerify').click(function () {
+    const data = {
+        verifyCode: $('#verifyCode').val(),
+    }
+
+    $.ajax({
+        url: '/dang-ky/verifyEmail',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (result) {
+            if (result.verifyEmail) {
+                $('#verifyEmailModal').modal('hide'); // Đóng modal xác thực
+                showSuccessToast('Xác thực email thành công'); // hiển thị thông báo
+                $('#loginRegisterModal').modal('show'); // Mở modal đăng nhập
+                // Mở tab đăng nhập
+                $("#login-tab").tab("show");
+                // Điền sẵn thông tin đăng nhập
+                $('#loginEmail').val($('#registerUserName').val());
+                $('#loginPassword').val($('#registerPassword').val());
+            } else {
+                showErrorToast('Xac thực email thất bại');
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+});
+$('#btnVerify1').click(function () {
+    const data = {
+        verifyCode: $('#verifyCode').val(),
+    }
+    $.ajax({
+        url: '/dang-ky/verifyEmail',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (result) {
+            if (result.verifyEmail) {
+                $('#verifyEmailModal').modal('hide'); // Đóng modal xác thực
+                showSuccessToast('Xác thực email thành công'); // hiển thị thông báo
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                showErrorToast('Xac thực email thất bại');
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+});
+
 // Kiểm tra trạng thái tài khoản
 function checkUserStatus() {
     $.ajax({
@@ -289,10 +315,13 @@ function checkUserStatus() {
         success: function (result) {
             if (result.status == false) {
                 $('#verifyEmailModal').modal('show'); // hiển thị modal xác nhận đăng ký
-                $('#err-verifyCode').html(`Vui lòng xác thực Email của bạn để tiếp tục sử dụng, 
-                Email đã được gửi đến <span id="emailVerify"class="text-danger">${result.email}
-                </span>. Vui lòng kiểm tra hộp thư Email của bạn.`);
-                $('#link-resend').click();
+                $('#err-verifyCode').html(`Vui lòng xác thực tài khoản của bạn để tiếp tục sử dụng ứng dụng. Bấm gửi mã xác thực để gửi mã đến Email <span id="emailVerify"class="text-danger">${result.email}
+                </span> của bạn.`);
+                
+                $('#link-resend').text(`Gửi mã xác thực`);
+                $('#btnVerify').addClass('d-none'); 
+                $('#btnVerify1').removeClass('d-none');
+                $('#btnVerifyLogout').removeClass('d-none');
             }
         },
         error: function (err) {
@@ -343,4 +372,10 @@ $('#link-resend').click(function (event) {
             console.log(error);
         }
     });
+});
+
+// nút đăng xuất
+$('#btnVerifyLogout').click(function () {
+    xoaCookie('authToken');
+    window.location.href = '/';
 });
