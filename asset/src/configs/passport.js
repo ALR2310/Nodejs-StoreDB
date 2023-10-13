@@ -21,6 +21,7 @@ passport.use(
         clientID: '1024863065605208',
         clientSecret: '705dd056a08bcd8463d52f84a2d2adb0',
         callbackURL: "/dang-nhap/facebook/callback",
+        profileFields: ['id', 'displayName', 'photos', 'email', 'gender', 'birthday']
     }, (accessToken, refreshToken, profile, done) => {
         done(null, profile);
     })

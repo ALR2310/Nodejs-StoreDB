@@ -78,7 +78,7 @@ module.exports = {
                     const userId = checkEmail[0].Id; // Lấy id người dùng
 
                     //Kiểm tra xem đã có mã xác thực chưa(authToken)
-                    await generateAuthToken(userId, res);
+                    await generateAuthToken(userId, res); // Thêm mã xác thực vào cookie
                 } else {
                     // nếu không có googleId, thêm googleId vào tài khoản
                     const userId = checkEmail[0].Id; // Lấy id người dùng
@@ -86,7 +86,7 @@ module.exports = {
                     await connection.execute(sql, [googleId, userId]);
 
                     // kiểm tra xem đã có mã xác thực chưa(authToken)
-                    await generateAuthToken(userId, res);
+                    await generateAuthToken(userId, res); // Thêm mã xác thực vào cookie
                 }
             } else {
                 // email không tồn tại, tiến hành đăng ký tài khoản mới
@@ -102,7 +102,7 @@ module.exports = {
                 await connection.execute(sql, params);
 
                 // kiểm tra xem đã có mã xác thực chưa(authToken)
-                await generateAuthToken(userId, res);
+                await generateAuthToken(userId, res); // Thêm mã xác thực vào cookie
             }
             // đóng cửa sổ đăng nhập, reload lại trang web chính
             res.send('<script>window.opener.location.reload(); window.close();</script>');
@@ -113,7 +113,43 @@ module.exports = {
 
     // xử lý đăng nhập bằng facebook
     async loginFacebook(req, res) {
-        console.log(req.user);
+        const user = req.user;
+        var facebookId = user.id;
+        var displayName = user.displayName;
+        var gender = user.gender;
+        var avatar = user.photos[0].value;
+
+        const connection = await db;
+        try {
+            // Kiểm tra FacebookId
+            var sql = 'select * from users where FacebookId = ?';
+            const [checkFacebookId] = await connection.execute(sql, [facebookId]);
+
+            if (checkFacebookId.length > 0) {
+                // Nếu facebookId tồn tại, tiến hành đăng nhập
+                const userId = checkFacebookId[0].Id; // Lấy id người dùng
+
+                //Kiểm tra xem đã có mã xác thực chưa(authToken)
+                await generateAuthToken(userId, res); // Thêm mã xác thực vào cookie
+            } else {
+                // nếu facebookId không tồn tại, tạo mới tài khoản và thêm vào database
+                sql = 'INSERT INTO Users (FacebookId, UserName, Avatar, Status) VALUES (?, ?, ?, ?)';
+                const [insertUserResult] = await connection.execute(sql, [facebookId, displayName, avatar, 'Active']);
+
+                const userId = insertUserResult.insertId; // Lấy id người dùng
+
+                // Thêm vào userinfor
+                sql = 'INSERT INTO usersinfor (userid, displayname, gender) VALUES (?, ?, ?)';
+                await connection.execute(sql, [userId, displayName, gender || null]);
+
+                // Kiểm tra xem đã có mã xác thực chưa(authToken)
+                await generateAuthToken(userId, res); // Thêm mã xác thực vào cookie
+            }
+            // đóng cửa sổ đăng nhập, reload lại trang web chính
+            res.send('<script>window.opener.location.reload(); window.close();</script>');
+        } catch (err) {
+            console.log('Lỗi truy vấn:', err);
+        }
     },
 
     // Hàm xử lý chức năng đăng nhập
