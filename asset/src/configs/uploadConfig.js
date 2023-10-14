@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs-extra');
-
+require('dotenv').config();
 
 // Định nghĩa storage cho tệp hình ảnh
 const imageStorage = multer.diskStorage({
