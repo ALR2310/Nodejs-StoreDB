@@ -1,0 +1,58 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Users</div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <!-- Danh sách nhắn tin -->
+                        <li class="list-group-item">User 1</li>
+                        <li class="list-group-item">User 2</li>
+                        <li class="list-group-item">User 3</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Chat</div>
+                <div class="card-body">
+                    <div class="chat-box">
+                        <!-- ti nhắn sẽ nằm ở đây -->
+                        {{#each messages}}
+                        <div class="chat-message border p-2">
+                            <div>{{this.UserId}}</div>
+                            <p class="mb-0">{{this.MessageText}}</p>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <div class="input-group mt-3">
+                        <input id="tblMessage" type="text" class="form-control" placeholder="Nhập nội dung tin nhắn">
+                        <button id="btnSend" class="btn btn-primary">Gửi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const socket = new WebSocket('ws://localhost:8080'); // Điều chỉnh địa chỉ máy chủ WebSocket tại đây
+
+        const messageInput = document.getElementById('tblMessage');
+        const sendButton = document.getElementById('btnSend');
+        const chatOutput = document.querySelector('.chat-box');
+
+        socket.onmessage = (event) => {
+            chatOutput.innerHTML += '<p>' + event.data + '</p>';
+        };
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            socket.send(message);
+            messageInput.value = '';
+        });
+    });
+</script>

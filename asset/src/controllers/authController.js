@@ -15,7 +15,7 @@ function generateVerificationCode() {
 // Gửi mã xác thực
 function sendVerificationEmail(email, verifyCode) {
     var mailOptions = {
-        from: "ansaka147@gmail.com",
+        from: process.env.EMAIL_NAME,
         to: email,
         subject: "Verification Code",
         text: `Mã xác thực ứng dụng của bạn là: ${verifyCode}`,

@@ -10,9 +10,8 @@ function returnData(success = false, notice = 'Lấy dữ liệu thất bại', 
 }
 
 module.exports = {
+    // Api lấy danh sách sản phẩm
     async getProduct(req, res) {
-
-
         const connection = await db
         try {
             // nhận điều kiện truy vấn
@@ -52,6 +51,7 @@ module.exports = {
         }
     },
 
+    // Api lấy danh sách người dùng
     async getUser(req, res) {
         const connection = await db
         try {

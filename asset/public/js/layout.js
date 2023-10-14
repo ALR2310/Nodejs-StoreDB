@@ -251,7 +251,7 @@ $('#loginGoogle').click(function () {
 
 // Btn đăng nhập bằng facebook
 $('#loginFacebook').click(function() {
-    const width = 530;
+    const width = 750;
     const height = 600;
     const left = window.innerWidth / 2 - width / 2;
     const top = window.innerHeight / 2 - height / 2;

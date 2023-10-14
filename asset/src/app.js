@@ -3,16 +3,17 @@ const handlebars = require('express-handlebars')
 const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
 const session = require('express-session');
-const passportConfigs = require('./configs/passport');
+const passportConfigs = require('./configs/passport')
 const app = express()
 const path = require('path')
-const host = 'localhost'
-const port = 2310
+require('dotenv').config();
+const host = process.env.HOST
+const port = process.env.PORT
 
 
 // Sử dụng express-session
 app.use(session({
-  secret: 'mysecret',
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false
 }));
