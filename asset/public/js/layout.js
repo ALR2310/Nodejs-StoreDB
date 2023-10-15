@@ -250,7 +250,7 @@ $('#loginGoogle').click(function () {
 });
 
 // Btn đăng nhập bằng facebook
-$('#loginFacebook').click(function() {
+$('#loginFacebook').click(function () {
     const width = 750;
     const height = 600;
     const left = window.innerWidth / 2 - width / 2;
@@ -337,9 +337,9 @@ function checkUserStatus() {
                 $('#verifyEmailModal').modal('show'); // hiển thị modal xác nhận đăng ký
                 $('#err-verifyCode').html(`Vui lòng xác thực tài khoản của bạn để tiếp tục sử dụng ứng dụng. Bấm gửi mã xác thực để gửi mã đến Email <span id="emailVerify"class="text-danger">${result.email}
                 </span> của bạn.`);
-                
+
                 $('#link-resend').text(`Gửi mã xác thực`);
-                $('#btnVerify').addClass('d-none'); 
+                $('#btnVerify').addClass('d-none');
                 $('#btnVerify1').removeClass('d-none');
                 $('#btnVerifyLogout').removeClass('d-none');
             }
@@ -398,4 +398,17 @@ $('#link-resend').click(function (event) {
 $('#btnVerifyLogout').click(function () {
     xoaCookie('authToken');
     window.location.href = '/';
+});
+
+// Gọi sự kiện đăng ký bằng phím enter trên các input
+$('#registerEmail, #registerUserName, #registerPassword, #confirmPassword').on('keyup', function (e) {
+    if (e.key === 'Enter') {
+        $('#btnRegister').click();
+    }
+});
+// Gọi sự kiện đăng nhập bằng phím enter trên các input
+$('#loginEmail, #loginPassword').on('keyup', function (e) {
+    if (e.key === 'Enter') {
+        $('#btnLogin').click();
+    }
 });

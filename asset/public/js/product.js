@@ -123,8 +123,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-
 });
 
 let currentRating = 5; // biến rating mặt định
@@ -245,15 +243,17 @@ function convertPlaceHbs(template) {
 }
 
 
-var offsetPage = 0;
+var PrdR_offsetPage = 0;
+var PrdC_offsetPage = 0;
 var sizePage = 3;
+
 // nút xem tiếp các đánh giá
 function btnPdRevNext() {
     var productId = $('.product-info').attr('prd');
-    offsetPage += sizePage;
+    PrdR_offsetPage += sizePage;
 
     $.ajax({
-        url: `loadMoreReviews?Id=${productId}&Offset=${offsetPage}`,
+        url: `loadMoreReviews?Id=${productId}&Offset=${PrdR_offsetPage}`,
         method: 'GET',
         success: function (result) {
             var source = $('#template-productReviews').html(); // Nguồn dữ liệu
@@ -275,10 +275,10 @@ function btnPdRevNext() {
 // nút xem lại các đánh giá
 function btnPdRevPrev() {
     var productId = $('.product-info').attr('prd');
-    offsetPage -= sizePage;
+    PrdR_offsetPage -= sizePage;
 
     $.ajax({
-        url: `loadMoreReviews?Id=${productId}&Offset=${offsetPage}`,
+        url: `loadMoreReviews?Id=${productId}&Offset=${PrdR_offsetPage}`,
         method: 'GET',
         success: function (result) {
             var source = $('#template-productReviews').html(); // Nguồn dữ liệu
@@ -288,7 +288,7 @@ function btnPdRevPrev() {
             $('#templateReviewsContent').html(data); // Đưa nội dung mới ra views
             showRatingForUser(); // gọi function để hiển thị số đánh giá của người dùng
 
-            if(offsetPage == 0){
+            if (PrdR_offsetPage == 0) {
                 $('#btn-pdr_prev').addClass('disabled')
             }
         },
@@ -297,3 +297,115 @@ function btnPdRevPrev() {
         }
     });
 }
+
+// nút xem tiêp các bình luận
+function btnPdCommentNext() {
+    var productId = $('.product-info').attr('prd');
+    PrdC_offsetPage += sizePage;
+
+    $.ajax({
+        url: `loadMoreComments?Id=${productId}&Offset=${PrdC_offsetPage}`,
+        method: 'GET',
+        success: function (result) {
+            var source = $('#template-productComments').html();
+            var convertSource = convertPlaceHbs(source);
+            var template = Handlebars.compile(convertSource);
+            var data = template({ ProductComments: result.data });
+            $('#pdc-commentsContent').html(data);
+
+            if (result.data.length < 3) {
+                $('#btn-pdc_next').addClass('disabled')
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+}
+
+// nút xem lại các bình luận sản phẩm
+function btnPdCommentPrev() {
+    var productId = $('.product-info').attr('prd');
+    PrdC_offsetPage -= sizePage;
+
+    $.ajax({
+        url: `loadMoreComments?Id=${productId}&Offset=${PrdC_offsetPage}`,
+        method: 'GET',
+        success: function (result) {
+            var source = $('#template-productComments').html();
+            var convertSource = convertPlaceHbs(source);
+            var template = Handlebars.compile(convertSource);
+            var data = template({ ProductComments: result.data });
+            $('#pdc-commentsContent').html(data);
+
+            if (PrdC_offsetPage == 0) {
+                $('#btn-pdc_prev').addClass('disabled')
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+    // Lọc sản phẩm theo mới nhất và  cũ nhất
+    $("#pdc-sort").on('change', function () {
+        var selectedValue = $(this).val();
+
+        var action;
+        // Thực hiện xử lý dựa trên giá trị đã chọn
+        if (selectedValue === 'newest') {
+            action = 'newest';
+        } else if (selectedValue === 'oldest') {
+            action = 'oldest';
+        }
+
+        $.ajax({
+            url: 'SortPorductComments',
+            type: 'GET',
+            data: {
+                action: action,
+                productId: $('.product-info').attr('prd'),
+            },
+            success: function (res) {
+                var source = $('#template-productComments').html();
+                var convertSource = convertPlaceHbs(source);
+                var template = Handlebars.compile(convertSource);
+                var data = template({ ProductComments: res.data });
+                $('#pdc-commentsContent').html(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    });
+
+    // Gửi bình luận mới
+    $('#btn-pdc_send').click(function () {
+        const data = {
+            productId: $('.product-info').attr('prd'),
+            userId: $('.product-info').attr('usrid'),
+            username: $('#pdc-username').val(),
+            email: $('#pdc-email').val(),
+            description: $('#pdc-comment').val(),
+        }
+
+        $.ajax({
+            url: 'createProductComments',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            dataType: 'json',
+            success: function (res) {
+                if (res.success) {
+                    $('#pdc-comment').val(''); // Đặt lại nội dung
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    });
+});
+

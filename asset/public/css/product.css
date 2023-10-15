@@ -41,6 +41,17 @@ p {
     margin-right: 20px;
 }
 
+/* ////////////////// */
+
+.card-title {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    display: -webkit-box;
+    overflow: hidden;
+}
+
+/* //////////////// */
+
 #divQuantity {
     max-width: 120px;
 }
@@ -143,4 +154,16 @@ p {
 
 .pdr-img {
     width: 150px;
+}
+
+/* /////////////////// */
+
+#btn-pdc_send {
+    position: absolute;
+    top: 20%;
+    right: 10px;
+}
+
+.pdc-infor {
+    font-size: 18px;
 }

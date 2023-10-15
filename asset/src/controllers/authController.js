@@ -281,7 +281,7 @@ module.exports = {
 
         if (res.locals.currentUser) {
 
-            const CurrentUserId = res.locals.currentUser.Id;
+            const CurrentUserId = res.locals.currentUser.UserId;
             const connection = await db;
             try {
                 var sql = 'SELECT * FROM users WHERE Id = ?';

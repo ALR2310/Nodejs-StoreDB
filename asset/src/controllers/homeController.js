@@ -1,37 +1,37 @@
 const db = require('../configs/dbconnect');
 const WebSocket = require('ws');
 
-// Khởi tạo máy chủ WebSocket trên cổng 8080
-const wss = new WebSocket.Server({ port: 8080 });
+// // Khởi tạo máy chủ WebSocket
+// const wss = new WebSocket.Server({ port: process.env.WS_PORT });
 
-// Xử lý kết nối từ client
-wss.on('connection', (ws) => {
-    console.log('Client connected.');
+// // Xử lý kết nối từ client
+// wss.on('connection', (ws) => {
+//     console.log('Client connected.');
 
-    // Lắng nghe tin nhắn từ client
-    ws.on('message', async (message, res) => {
-        console.log(`Nhận được tin nhắn: ${message}`);
+//     // Lắng nghe tin nhắn từ client
+//     ws.on('message', async (message) => {
+//         console.log(`Nhận được tin nhắn: ${message}`);
 
-        // Xử lý tin nhắn ở đây (ví dụ: lưu vào cơ sở dữ liệu)
-        const connection = await db;
-        try {
+//         // Xử lý tin nhắn ở đây (ví dụ: lưu vào cơ sở dữ liệu)
+//         const connection = await db;
+//         try {
 
-            var sql = 'insert Message(MessageText) value(?)'
-            var params = [message];
+//             var sql = 'insert Message(MessageText) value(?)'
+//             var params = [message];
 
-            await connection.execute(sql, params);
-        } catch (err) {
-            console.log('Lỗi truy vấn: ' + err);
-        }
-        // Gửi tin nhắn lại cho client
-        ws.send(`Bạn đã gửi: ${message}`);
-    });
+//             await connection.execute(sql, params);
+//         } catch (err) {
+//             console.log('Lỗi truy vấn: ' + err);
+//         }
+//         // Gửi tin nhắn lại cho client
+//         ws.send(`Bạn đã gửi: ${message}`);
+//     });
 
-    // Xử lý đóng kết nối
-    ws.on('close', () => {
-        console.log('Client disconnected.');
-    });
-});
+//     // Xử lý đóng kết nối
+//     ws.on('close', () => {
+//         console.log('Client disconnected.');
+//     });
+// });
 
 // function load sản phẩm
 async function LoadProduct() {
@@ -67,7 +67,7 @@ module.exports = {
 
         const connection = await db;
         try {
-            var currentUserId = res.locals.currentUser.Id;
+            var currentUserId = res.locals.currentUser.UserId;
 
             var sql = 'insert Message(UserId, MessageText) value(?, ?)'
             var params = [currentUserId, message];
