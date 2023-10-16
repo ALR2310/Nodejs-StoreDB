@@ -157,6 +157,19 @@ async function loadProductComment(productId) {
     }
 }
 
+// Lấy danh sách liên quan đến sản phẩm
+async function loadMoreProduct(categoryId) {
+    const connection = await db;
+    try {
+        var sql = 'select * from product where CategoryId = ? order by Id desc limit 10';
+        const [result] = await connection.execute(sql, [categoryId]);
+
+        return result;
+    } catch (err) {
+        console.log('Lỗi truy vấn:', err);
+    }
+}
+
 // Lấy số lượng các bình luận
 async function loadTotalComment() {
     const connection = await db;
@@ -195,14 +208,14 @@ module.exports = {
         const ProductComments = await loadProductComment(ProductId); // lấy bình luận sản phẩm
         const totalComment = await loadTotalComment(ProductId); // lấy số lượng bình luận
         const listProduct = await LoadListProduct(ProductId); // lấy ra danh sách sản phẩm
-
-        console.log(listProduct);
+        const MoreProduct = await loadMoreProduct(product.CategoryId); // lấy ra danh sách sản phẩm liên quan
 
         // Kiểm tra xem 2 biến này có tồn tại không
         if (product && productReviews) {
             res.render('product/index', {
                 product: product,
                 listProduct: listProduct,
+                MoreProduct: MoreProduct,
                 productReviews: productReviews,
                 ProductComments: ProductComments,
                 rating: totalRating,

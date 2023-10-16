@@ -20,8 +20,6 @@ p {
 }
 
 .product-infor_price {
-    font-size: 20px;
-    font-weight: 600;
     margin: 20px 0;
     color: var(--bs-primary);
 }
@@ -45,7 +43,14 @@ p {
 
 .card-title {
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    overflow: hidden;
+}
+
+.card-title1 {
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     display: -webkit-box;
     overflow: hidden;
 }

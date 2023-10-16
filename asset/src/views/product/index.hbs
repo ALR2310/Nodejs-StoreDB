@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/css/product.css">
 
 <div class="container bg-white">
-    <div class="row">
+    <div class="row pt-3">
         <div class="col-5">
             <div class="product-imgs">
                 <img src="{{product.Images}}" alt="">
@@ -11,7 +11,7 @@
         <div class="col-7">
             <div class="product-info" prd="{{product.ProductId}}" usrid="{{currentUser.UserId}}">
                 <h3 class="product-infor_title mt-4 me-3">{{product.Productname}}</h3>
-                <p class="product-infor_price">{{product.Price}}đ</p>
+                <h4 class="product-infor_price price">{{product.Price}}đ</h4>
 
                 <div class="row mb-4 align-items-center">
                     <div class="col-auto">Số lượng:</div>
@@ -47,6 +47,7 @@
                 <button id="btn-readmore" class="btn btn-light">Xem thêm▼</button>
             </div>
         </div>
+
         <div class="col-4 pe-0">
             {{#if listProduct}}
             <div class=" ps-3 pb-3 pe-2 bg-white">
@@ -59,7 +60,8 @@
                                 <img src="{{this.Images}}" alt="Image" class="card-img">
                             </div>
                             <div class="col-8">
-                                <h6 class="card-title mb-0">{{this.Productname}}</h6>
+                                <h6 class="card-title text-muted mb-0">{{this.Productname}}</h6>
+                                <p class="text-danger price">{{this.Price}}</p>
                             </div>
                         </div>
                     </a>
@@ -356,6 +358,32 @@
             {{/if}}
         </div>
 
+    </div>
+</div>
+
+<div class="container bg-white mt-4">
+    <h4 class="p-3 mb-0">Các sản phẩm liên quan</h4>
+    <hr>
+    <div class="d-flex overflow-auto ">
+        {{#if MoreProduct}}
+        {{#each MoreProduct}}
+        <div class="col-4">
+            <div class="card border-0 mb-3">
+                <a href="" class="text-decoration-none">
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="{{this.Images}}" alt="Image" class="card-img">
+                        </div>
+                        <div class="col-8 ps-0">
+                            <h6 class="card-title mt-3 mb-2 me-1 text-muted mb-0">{{this.Productname}} ABC</h6>
+                            <p class="text-danger price">{{this.Price}} BDF</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {{/each}}
+        {{/if}}
     </div>
 </div>
 
