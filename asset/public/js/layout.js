@@ -185,7 +185,7 @@ $('#btnRegister').click(function () {
                     // Mở modal xác nhận email
                     $('#verifyEmailModal').modal('show');
                     // đặt địa chỉ Email
-                    $('#emailVerify').val(data.email);
+                    $('#emailVerify').text(data.email);
                 } else {
                     showErrorToast('Đăng ký tài khoản thất bại');
                 }

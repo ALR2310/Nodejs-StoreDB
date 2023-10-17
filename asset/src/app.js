@@ -47,6 +47,7 @@ const userRouter = require('./routers/userRouter');
 const uploadRouter = require('./routers/uploadRouter');
 const apiRouter = require('./routers/apiRouter');
 const authRouter = require('./routers/authRouter');
+const adminRouter = require('./routers/adminRouter');
 
 app.use('/', homeRouter);
 app.use('/', authRouter);
@@ -54,6 +55,7 @@ app.use('/san-pham', productRouter);
 app.use('/nguoi-dung', userRouter);
 app.use('/upload', uploadRouter);
 app.use('/api', apiRouter);
+app.use('/admin', adminRouter);
 
 
 app.listen(port, () => console.log(`Ứng dụng chạy trên http://${host}:${port}`))
